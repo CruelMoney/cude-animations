@@ -1,5 +1,3 @@
-console.log("ready")
-
 // t is the current time (or position) of the tween. This can be seconds or frames, steps, seconds, ms, whatever – as long as the unit is the same as is used for the total time [3].
 // b is the beginning value of the property.
 // c is the change between the beginning and destination value of the property.
@@ -43,7 +41,14 @@ easeInOutExpo = function (t, b, c, d) {
 
 
 
-animate = function(attributeSelectFun, start, end, dur = 2000, reverse = false){
+// USAGE:
+// const pie = document.querySelector(".pie .outer")
+// const man = function(val){
+//   pie.style.strokeDasharray = val + " 100";    
+// }
+// animate(man, 0, 100, 2500)
+
+animate = function(manipulator, start, end, dur = 2000, reverse = false){
 
   let startValue       = start,
       endValue         = end,
@@ -57,11 +62,11 @@ animate = function(attributeSelectFun, start, end, dur = 2000, reverse = false){
     const theAnimation = setInterval(function(){
       window.requestAnimationFrame(function(){
         const val = easing(time, startValue, change, duration);
-        attributeSelectFun(val)
+        manipulator(val)
         time = reverse ? time-10 : time+10;
         if(time >= duration || (reverse && time <= 0)){ 
           clearInterval(theAnimation);
-          attributeSelectFun(endValue, true)
+          manipulator(endValue, true)
           resolve()
         }
       })
@@ -71,30 +76,29 @@ animate = function(attributeSelectFun, start, end, dur = 2000, reverse = false){
 }
 
 
+// Code below is hacked together, to create chained animations 
 const numbers = document.querySelectorAll(".count-up-animate span")
 const pies = document.querySelectorAll(".pie .outer")
 
 const nextAnimation = (i=0)=>{
   const pie = pies[i]
   const num = numbers[i]
-  attrFun1 = function(val, last){
+  man1 = function(val, last){
     if(last){
       num.style.fontSize = "64px"
       num.innerHTML = "🖕🏼"
     }else{
       num.innerHTML = Math.floor(val) + "%";
     }
-    
   }
-  attrFun2 = function(val){
+  man2 = function(val){
     pie.style.strokeDasharray = val + " 100";    
   }
-  animate(attrFun1, 0, num.dataset.endvalue, 600)
-  animate(attrFun2, 0, pie.dataset.endvalue, 600)
+  animate(man1, 0, num.dataset.endvalue, 600)
+  animate(man2, 0, pie.dataset.endvalue, 600)
     .then(()=>{
       if(i < pies.length-1) nextAnimation(i+1)
      
     })
 }
 nextAnimation()
-window.nextAnimation = nextAnimation
