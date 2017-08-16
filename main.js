@@ -48,6 +48,7 @@ easeInOutExpo = function (t, b, c, d) {
 // }
 // animate(man, 0, 100, 2500)
 
+// manipulator() is a function that gets called each time the value is animated
 animate = function(manipulator, start, end, dur = 2000, reverse = false){
 
   let startValue       = start,
@@ -86,7 +87,7 @@ const nextAnimation = (i=0)=>{
   man1 = function(val, last){
     if(last){
       num.style.fontSize = "64px"
-      num.innerHTML = "🖕🏼"
+      num.innerHTML = "💩"
     }else{
       num.innerHTML = Math.floor(val) + "%";
     }
