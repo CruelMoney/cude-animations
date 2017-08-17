@@ -1,7 +1,7 @@
 .pie{
   border-radius: 50%;
   transform: rotate(-90deg);
-  margin: -25%;
+ // margin: -25%;
 }
 
 span{

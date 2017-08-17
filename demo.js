@@ -17,8 +17,10 @@ const nextAnimation = function(i=0){
   man2 = function(val){
     pie.style.strokeDasharray = val + " 100";    
   }
-  cudeAnimations.animate(man1, 0, num.dataset.endvalue, 600)
-  cudeAnimations.animate(man2, 0, pie.dataset.endvalue, 600)
+  const end1 = num.getAttribute('data-endvalue')
+  const end2 = pie.getAttribute('data-endvalue')
+  cudeAnimations.animate(man1, 0, end1, 600)
+  cudeAnimations.animate(man2, 0, end2, 600)
     .then(()=>{
       if(i < pies.length-1) nextAnimation(i+1)
      
