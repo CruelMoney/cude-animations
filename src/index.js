@@ -1,4 +1,3 @@
-import "babel-polyfill"
 import { init, keyframes } from './scrollAnimation'
 import { animate } from './customAnimation'
 
