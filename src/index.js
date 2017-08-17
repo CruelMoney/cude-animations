@@ -1,7 +1,8 @@
 import { init, keyframes } from './scrollAnimation'
 import { animation } from './customAnimation'
 
-export {
+
+module.exports = {
   init,
   keyframes,
   animation

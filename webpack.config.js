@@ -5,7 +5,10 @@ module.exports = {
 	entry: './index.js',
 
 	output: {
-		filename: 'lib/cude-animations.js'
+		filename: 'lib/cude-animations.js',
+		libraryTarget: 'var',
+    // `library` determines the name of the global variable
+    library: 'cudeAnimations'
 	},
 
 	context: path.join(__dirname, 'src'),
