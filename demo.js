@@ -3,7 +3,7 @@
 const numbers = document.querySelectorAll(".count-up-animate span")
 const pies = document.querySelectorAll(".pie .outer")
 
-const nextAnimation = function(i=0){
+const nextAnimation = function(i){
   const pie = pies[i]
   const num = numbers[i]
   man1 = function(val, last){
@@ -26,4 +26,4 @@ const nextAnimation = function(i=0){
      
     })
 }
-nextAnimation()
+nextAnimation(0)
