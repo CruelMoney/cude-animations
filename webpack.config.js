@@ -25,17 +25,15 @@ module.exports = {
 				loader: 'babel-loader',
 
 				options: {
-					presets: ['es2015', 'react', 'stage-2'],
-					plugins: [
-						"es6-promise"
-					]
+					presets: ['es2015', 'react', 'stage-2']
 				}
 			}
 		]
 	},
 	plugins: [
     new UglifyJSPlugin({
-			compress: true
+			compress: true,
+			minify: true
 		})
   ]
 };
