@@ -5,7 +5,7 @@ module.exports = {
 	entry: './index.js',
 
 	output: {
-		filename: 'lib/[name].js'
+		filename: 'lib/cude-animations.js'
 	},
 
 	context: path.join(__dirname, 'src'),
