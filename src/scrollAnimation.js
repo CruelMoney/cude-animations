@@ -25,20 +25,15 @@ var PROPERTIES =               ['translateX', 'translateY', 'opacity', 'rotate',
 
 /*  Construction
 -------------------------------------------------- */
-const init = (theContainer) => {
+const init = (theContainer, offset = 0) => {
   container = theContainer;
+  pageOffset = offset
   const throttledFunction = throttle(updatePage, 10);
   window.onscroll = throttledFunction
   setupValues();
 }
 
 const setupValues = (wrapper) => {
-  // MASSIVE HACK FOR GETTING OFFSET IN DEVELOPMENT
-  setTimeout(()=>{
-   // pageOffset = container.getBoundingClientRect().top + window.scrollY
-    pageOffset = 200
-    console.log(pageOffset)
-  },1000)
   scrollTop = window.scrollY - pageOffset
   windowHeight = window.innerHeight;
   windowWidth = window.innerWidth;
@@ -67,8 +62,8 @@ const buildPage = () => {
   }
   container.style.height = bodyHeight + "px";
   //$window.scroll(0);
-  currentWrapper = wrappers[0];
-  currentWrapper.classList.add("active")
+ // currentWrapper = wrappers[0];
+ // currentWrapper.classList.add("active")
 }
 
 const convertAllPropsToPx = () => {
