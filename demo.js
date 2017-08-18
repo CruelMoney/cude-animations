@@ -19,8 +19,8 @@ const nextAnimation = function(i){
   }
   const end1 = num.getAttribute('data-endvalue')
   const end2 = pie.getAttribute('data-endvalue')
-  cudeAnimations.animate(man1, 0, end1, 600)
-  cudeAnimations.animate(man2, 0, end2, 600)
+  window.cudeAnimations.animate(man1, 0, end1, 600)
+  window.cudeAnimations.animate(man2, 0, end2, 600)
     .then(function(){
       if(i < pies.length-1) nextAnimation(i+1)
      
