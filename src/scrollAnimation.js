@@ -196,13 +196,18 @@ const setKeyframe = () => {
 
 const showCurrentWrappers = () => {
   var i;
-  if(keyframes[currentKeyframe].wrapper != currentWrapper) {
-    currentWrapper.classList.remove("active")
-    keyframes[currentKeyframe].wrapper.classList.add("active")
-    currentWrapper = keyframes[currentKeyframe].wrapper;
-    if (keyframes[currentKeyframe].keyframeStarted){
-      keyframes[currentKeyframe].keyframeStarted();
-    } 
+  if(scrollTop >= 0){
+    if(!currentWrapper){
+      currentWrapper = wrappers[0]
+    }
+    if(keyframes[currentKeyframe].wrapper != currentWrapper) {
+      currentWrapper.classList.remove("active")
+      keyframes[currentKeyframe].wrapper.classList.add("active")
+      currentWrapper = keyframes[currentKeyframe].wrapper;
+      if (keyframes[currentKeyframe].keyframeStarted){
+        keyframes[currentKeyframe].keyframeStarted();
+      } 
+    }
   }
 }
 
