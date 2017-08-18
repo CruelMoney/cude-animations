@@ -1,7 +1,7 @@
 import { init, keyframes } from './scrollAnimation'
 import { animate } from './customAnimation'
 
-window.cudeAnimations = {
+Window.cudeAnimations = {
   init,
   keyframes, 
   animate
