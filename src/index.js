@@ -1,13 +1,13 @@
 import { init, keyframes } from './scrollAnimation'
 import { animate } from './customAnimation'
 
-export {
+window.cudeAnimations = {
   init,
-  keyframes,
+  keyframes, 
   animate
 }
 
-module.exports = {
+export {
   init,
   keyframes,
   animate
