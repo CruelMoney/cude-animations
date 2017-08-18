@@ -134,6 +134,9 @@ const updatePage = () => {
     if(scrollTop > 0 && scrollTop <= (bodyHeight - windowHeight)) {
       animateElements();
       setKeyframe();
+    }else{
+      currentWrapper && currentWrapper.classList.remove("active")
+      currentWrapper = null
     }
   });
 }
@@ -183,6 +186,10 @@ const calcPropValue = (animation, property) => {
 
 
 const setKeyframe = () => {
+  if(!currentWrapper){
+    currentWrapper = wrappers[0]
+    currentWrapper.classList.add("active")
+  }
   if(scrollTop > (keyframes[currentKeyframe].duration + prevKeyframesDurations)) {
       prevKeyframesDurations += keyframes[currentKeyframe].duration;
       currentKeyframe++;
@@ -196,20 +203,16 @@ const setKeyframe = () => {
 
 const showCurrentWrappers = () => {
   var i;
-  if(scrollTop >= 0){
-    if(!currentWrapper){
-      currentWrapper = wrappers[0]
-      currentWrapper.classList.add("active")
+ 
+  if(keyframes[currentKeyframe].wrapper != currentWrapper) {
+    currentWrapper.classList.remove("active")
+    keyframes[currentKeyframe].wrapper.classList.add("active")
+    currentWrapper = keyframes[currentKeyframe].wrapper;
+    if (keyframes[currentKeyframe].keyframeStarted){
+      keyframes[currentKeyframe].keyframeStarted();
     }
-    if(keyframes[currentKeyframe].wrapper != currentWrapper) {
-      currentWrapper.classList.remove("active")
-      keyframes[currentKeyframe].wrapper.classList.add("active")
-      currentWrapper = keyframes[currentKeyframe].wrapper;
-      if (keyframes[currentKeyframe].keyframeStarted){
-        keyframes[currentKeyframe].keyframeStarted();
-      } 
-    }
-  }
+  } 
+
 }
 
 /*  Helpers
