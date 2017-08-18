@@ -1,7 +1,7 @@
 import { init, keyframes } from './scrollAnimation'
 import { animate } from './customAnimation'
 
-if(window){
+if(typeof(window) !== 'undefined'){
   window.cudeAnimations = {
     init,
     keyframes, 
