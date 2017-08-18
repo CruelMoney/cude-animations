@@ -199,6 +199,7 @@ const showCurrentWrappers = () => {
   if(scrollTop >= 0){
     if(!currentWrapper){
       currentWrapper = wrappers[0]
+      currentWrapper.classList.add("active")
     }
     if(keyframes[currentKeyframe].wrapper != currentWrapper) {
       currentWrapper.classList.remove("active")
