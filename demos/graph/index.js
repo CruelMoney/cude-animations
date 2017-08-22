@@ -72,16 +72,16 @@ var prevRatio = 0.0;
 function intersectionHandler(cb){
   return function(entries, observer){
     entries.forEach(function(entry){
+
+      // Reset values if element all out
+      if (entry.intersectionRatio === 0) {
+        setup()     
       
-      if (entry.intersectionRatio > prevRatio) {
-        cb()      
-      } else {
-        // Reset values if element on the way out
-        setup() 
+      // Run animation if element all the way in
+      }else if(entry.intersectionRatio === 1){
+        cb()
       }
 
-      prevRatio = entry.intersectionRatio;
-      
     })
   }
 }
@@ -90,7 +90,7 @@ function intersectionHandler(cb){
 var options = {
   root: null,
   rootMargin: "0px",
-  threshold: 0.1
+  threshold: [1.0, 0.0]
 };
 var target = document.querySelector('#animate-here');
 var observer = new IntersectionObserver(
