@@ -38,10 +38,11 @@ export default class Animate{
     let elementManipulator = null  
     if (options.target){
       const elements = document.querySelectorAll(options.target)
+      console.log(elements)
       elementManipulator = (val, end) => {
-        elements.forEach(el=>{
-          el.innerHTML = Math.floor(val)
-        })
+        // elements.forEach(el=>{
+        //   el.innerHTML = Math.floor(val)
+        // })
       }
     }
 
