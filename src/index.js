@@ -1,16 +1,16 @@
 import { init, keyframes } from './scrollAnimation'
-import { animate } from './customAnimation'
+import Animate from './customAnimation'
 
 if(typeof(window) !== 'undefined'){
   window.cudeAnimations = {
     init,
     keyframes, 
-    animate
+    Animate
   }
 }
 
 export {
   init,
   keyframes,
-  animate
+  Animate
 }

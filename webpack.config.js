@@ -1,9 +1,13 @@
 const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
+console.log(process.env.NODE_ENV)
+
 module.exports = {
 	entry: './index.js',
-
+	
+	devtool: process.env.NODE_ENV === "development" ? "source-map" : "cheap-module-eval-source-map",
+	
 	output: {
 		filename: 'lib/cude-animations.js',
 		// libraryTarget: 'var',
@@ -35,7 +39,8 @@ module.exports = {
 	},
 	plugins: [
     new UglifyJSPlugin({
-			compress: true
+			compress: true,
+			sourceMap: process.env.NODE_ENV === "development" 
 		})
   ]
 };

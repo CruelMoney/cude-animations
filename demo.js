@@ -21,19 +21,19 @@ const nextAnimation = function(i){
   const end2 = pie.getAttribute('data-endvalue')
   
   // see source code for more documentation on parameters  
-  window.cudeAnimations.animate(
-    man1,         // Manipulator function called for each frame with the new value
-    0,            // From this value
-    end1,         // To this value
-    600,          // Duration in ms. Defaults to 250ms if not specified
-    false         // Reverse animation. Defaults to false if not specified
-  )
-
-  window.cudeAnimations.animate(
-    man2, 
-    0, 
-    end2, 
-    600).then( // animate() returns a promise that is resolved when animation is finished
+  window.cudeAnimations.animate({
+    manipulator:man1,
+    start: 0,
+    end: end1,
+    duration: 600,
+  })
+ 
+  window.cudeAnimations.animate({
+    manipulator:man2,
+    start: 0,
+    end: end2,
+    duration: 600,
+    }).then( // animate() returns a promise that is resolved when animation is finished
     function(){
       if(i < pies.length-1) nextAnimation(i+1) 
     })

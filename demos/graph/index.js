@@ -1,5 +1,4 @@
 
-// example usage of creating chained animations 
 const bars = document.querySelectorAll("path[id^=bar]")
 const arrowLines = document.querySelectorAll("path[id^=arrow]")
 var idx = 0
@@ -30,13 +29,14 @@ animateLine = function(line, duration=500){
   }
 
   const start = Number(line.style.strokeDashoffset)
-
-  return cudeAnimations.animate(
-    manipulator,            //  for each frame call manipulator
-    start,                  //  from this value
-    0,                      //  to this value
-    duration                //  over this duration in ms
-  )
+  const options = {
+    manipulator: manipulator,
+    start: start,
+    end: 0,
+    duration: duration
+  }
+  
+  return cudeAnimations.animate(options)
 }
 
 
