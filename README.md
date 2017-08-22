@@ -1,11 +1,9 @@
 # CountUp.js
-CountUp.js is a dependency-free, lightweight JavaScript "class" that can be used to quickly create animations that display numerical data in a more interesting way.
+cude-animations is a dependency-free, lightweight simple JavaScript library that can be used to create custom animations.
 
-Despite its name, CountUp can count in either direction, depending on the `startVal` and `endVal` params that you pass.
+cude-animations.js supports all browsers.
 
-CountUp.js supports all browsers.
-
-## [Try the demo](http://inorganik.github.io/countUp.js)
+## [Try the demos](https://cruelmoney.github.io/custom-animations/)
 
 ## Installation
 
