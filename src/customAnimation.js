@@ -14,6 +14,9 @@ import * as easings from './easings'
  *  or even a lot if the CPU is under pressure
  * @param  {boolean} reverse=false
  *  If true animates from end to start value 
+ * @param  {(t:number, b:number, c:number, d:number)=>void} customEasing
+ *  Custom easing function. See easings.js for examples. 
+ *  Defaults to easeInOutExpo
  * @return {Promise} 
  *  a Promise that is resolved when the animation is finished
  *  There's no ejects
@@ -24,14 +27,14 @@ import * as easings from './easings'
  *    }
  *    animate(man, 0, 100)
  */
-export const animate = (manipulator, start, end, dur = 2000, reverse = false, customEasing = null) => {
+export const animate = (manipulator, start, end, dur = 250, reverse = false, customEasing = easings.easeInOutExpo) => {
 
   let startValue       = Number(start),
       endValue         = Number(end),
       change           = endValue - startValue,
       duration         = Number(dur),
       time             = reverse ? duration : 0,
-      easing           = customEasing || easings.easeInOutExpo
+      easing           = customEasing
 
   return new Promise(function(resolve, reject) {
     
