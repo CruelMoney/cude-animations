@@ -9,38 +9,87 @@ CountUp.js supports all browsers.
 
 ## Installation
 
-Simply include the countUp.js file in your project or install via npm or bower using the package name `countup.js` or `countUp.js` respectively.
+Simply include the `cude-animations.js` file in your project or install via npm or bower using the package name `cude-animations`.
 
-Before making a pull request, please [read this](#contributing). MIT License.
+When including the file the classes are available through the global variable `cudeAnimations`.
+
+Otherwise the library exports the following modules:
+- `init` = (Function)
+- `keyframes` = (Function)
+- `Animate` = (Class)
+
+## Animate usage:
+
+When creating a new animation, it expects a options paramter.
+The options parameter is an object containing the following parameters:
+- `target` = {string} ID of html element, needs to be specified if the manipulator is not specified. When using target instead of manipulator, the value is rounded to 0 decimals.
+- `start` = {number} The value to start the animation from 
+- `end` = {number} The value to end the animation at
+- `duration` = {number} (optional) duration of the animation in ms. Default: 250
+- `reverse` = {boolean} (optional) If true animates from end to start value. Default: false
+- `customEasing` = {(t:number, b:number, c:number, d:number)=>void} (option). Default: easings.easeInOutExpo. See section below about custom functions.
+- `manipulator` = {(value:number, end:boolean)=>void} Is called once for each keyframe, needs to be specified if the target is not specified. Recommended way of controlling animation as it gives more control. Keep this function as efficient as possible, as it may be called many times.
 
 
-## Usage:
-Params:
-- `target` = id of html element, input, svg text element, or var of previously selected element/input where counting occurs
-- `startVal` = the value you want to begin at
-- `endVal` = the value you want to arrive at
-- `decimals` = (optional) number of decimal places in number, default 0
-- `duration` = (optional) duration in seconds, default 2
-- `options` = (optional, see demo) formatting/easing options object
-
-Decimals, duration, and options can be left out to use the default values.
-
+Example using target:
 ```js
-var numAnim = new CountUp("SomeElementYouWantToAnimate", 24.02, 99.99);
-numAnim.start();
+var options = {
+  target: ".animate-counter span",
+  start: 0,
+  end: 100,
+  duration: 1000
+}
+var animation = new cudeAnimations.Animate(options)
+animation.start()
 ```
 
-with optional callback:
-
+Example using manipulator:
 ```js
-numAnim.start(someMethodToCallOnComplete);
+//  Find the element manually. 
+//  Don't do this inside the manipulator function
+var element = document.querySelector(".animate-counter span")
 
-// or an anonymous function
-numAnim.start(function() {
-    // do something
-})
+//  Keep this function as efficient as possible, as it may be called many times
+manipulator = function(val){
+  element.innerHTML = val
+}
+
+var options = {
+  manipulator: manipulator,
+  start: 0,
+  end: 100,
+  duration: 1000
+}
+
+var animation = new cudeAnimations.Animate(options)
+animation.start()
 ```
 
+The start() method returns a Promise that is resolved when the animation is finished. This can be used to easily create chained animations. 
+
+Example of chained animation:
+```js
+var options = {
+  target: ".animate-counter span",
+  start: 0,
+  end: 100,
+  duration: 1000
+}
+
+var options2 = {
+  target: ".animate-counter-2 span",
+  start: 0,
+  end: 100,
+  duration: 1000
+}
+
+var animation = new cudeAnimations.Animate(options)
+var animation2 = new cudeAnimations.Animate(options2)
+
+animation
+  .start()
+  .then(animation2.start)
+```
 
 #### Custom easing:
 
@@ -61,6 +110,7 @@ Example:
 const linear = (t, b, c, d) => {
   return c * t / d + b;
 }
+
 const options = {
   target: ".mySelector",
   customEasing: linear
@@ -69,5 +119,9 @@ const options = {
   duration: 1000,
 }
 
-cudeAnimations.animate(options)
+new cudeAnimations.Animate(options).start()
 ```
+
+## Scroll Animation:
+This library also contains methods for controlling the animatino using scroll, instead of a duration. 
+Still needs to be documented. See `scrollAnimation.js` for code.
