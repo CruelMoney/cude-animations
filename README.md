@@ -3,7 +3,7 @@ cudeAnimations is a dependency-free, lightweight simple JavaScript library that 
 
 cudeAnimations.js supports all browsers.
 
-## [Try the demos](https://cruelmoney.github.io/custom-animations/)
+## [Try the demos](https://cruelmoney.github.io/cude-animations/)
 
 ## Installation
 

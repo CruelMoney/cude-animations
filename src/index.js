@@ -1,3 +1,4 @@
+import './polyfills'
 import { init, keyframes } from './scrollAnimation'
 import Animate from './customAnimation'
 
