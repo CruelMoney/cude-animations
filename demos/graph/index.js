@@ -6,28 +6,24 @@ var idx = 0
 //Setup start values for lines (hides them)
 setup = function(){
 
+  setStrokes = function(line, hide){
+    const len = line.getTotalLength().toFixed(0);
+    line.style.strokeDasharray = len 
+    line.style.strokeDashoffset = hide ? len : len-1
+  }
+
   bars.forEach(function(bar) {
-    const len = bar.getTotalLength().toFixed(0);
-    bar.style.strokeDasharray = len 
-    bar.style.strokeDashoffset = len-1 // - 1 -> making it visible before animation
+    setStrokes(bar)
   })
 
-  var len = arrowLines[0].getTotalLength().toFixed(0);
-  arrowLines[0].style.strokeDasharray = len
-  arrowLines[0].style.strokeDashoffset = len 
-
-  len = arrowLines[1].getTotalLength().toFixed(0);
-  arrowLines[1].style.strokeDasharray = len
-  arrowLines[1].style.strokeDashoffset = len 
-
-  len = arrowLines[2].getTotalLength().toFixed(0);
-  arrowLines[2].style.strokeDasharray = len
-  arrowLines[2].style.strokeDashoffset = len 
+  arrowLines.forEach(function(line) {
+    setStrokes(line, true)
+  })
 
 }
 
 //  Helper function to animate a line
-animateLine = function(line, duration=500){
+animateLine = function(line, duration){
   manipulator = function(val, last){
     line.style.strokeDashoffset = val.toFixed(0) 
   }
