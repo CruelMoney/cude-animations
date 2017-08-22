@@ -5,6 +5,7 @@ var idx = 0
 
 //Setup start values for lines (hides them)
 setup = function(){
+
   bars.forEach(function(bar) {
     const len = bar.getTotalLength();
     bar.style.strokeDasharray = len
@@ -14,12 +15,15 @@ setup = function(){
   var len = arrowLines[0].getTotalLength();
   arrowLines[0].style.strokeDasharray = len
   arrowLines[0].style.strokeDashoffset = len 
+
   len = arrowLines[1].getTotalLength();
   arrowLines[1].style.strokeDasharray = len
   arrowLines[1].style.strokeDashoffset = len 
+
   len = arrowLines[2].getTotalLength();
   arrowLines[2].style.strokeDasharray = len
   arrowLines[2].style.strokeDashoffset = -len 
+
 }
 
 //  Helper function to animate a line
@@ -35,19 +39,18 @@ animateLine = function(line, duration=500){
     end: 0,
     duration: duration
   }
-  
-  return cudeAnimations.animate(options)
-}
 
+  return new cudeAnimations.Animate(options)
+}
 
 animateArrow = function(){
   //First animate line
-  animateLine(arrowLines[2], 1200)
+  animateLine(arrowLines[2], 1200).start()
   //Then animate pointy part
   .then(
     function(){
-      animateLine(arrowLines[0])
-      animateLine(arrowLines[1])
+      animateLine(arrowLines[0]).start()
+      animateLine(arrowLines[1]).start()
     }
   )
 }
@@ -58,7 +61,7 @@ main = function(){
   bars.forEach(function(bar) {
     // Delay each bar to create overlap
     setTimeout(function(){
-      animateLine(bar)
+      animateLine(bar).start()
     }, 130*idx++)
   }, this);
 
