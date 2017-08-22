@@ -7,7 +7,7 @@ cudeAnimations.js supports all browsers.
 
 ## Installation
 
-Simply include the `cudeAnimations.js` file in your project or install via npm or bower using the package name `cudeAnimations`.
+Simply include the `cudeAnimations.js` file from the lib folder in your project or install via npm or bower using the package name `cudeAnimations`.
 
 When including the file the classes are available through the global variable `cudeAnimations`.
 
