@@ -6,7 +6,7 @@ console.log(process.env.NODE_ENV)
 module.exports = {
 	entry: './index.js',
 	
-	devtool: process.env.NODE_ENV === "development" ? "source-map" : "cheap-module-eval-source-map",
+	//devtool: process.env.NODE_ENV === "development" ? "source-map" : "cheap-module-eval-source-map",
 	
 	output: {
 		filename: 'lib/cudeAnimations.js',
