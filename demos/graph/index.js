@@ -20,7 +20,7 @@ setup = function(){
     setStrokes(line, true)
   })
 
-}
+}()
 
 //  Helper function to animate a line
 animateLine = function(line, duration){
@@ -51,9 +51,9 @@ animateArrow = function(){
   )
 }
 
-main = function(){
-  setup()
-  
+
+animation = function(){
+  console.log("started")
   bars.forEach(function(bar) {
     // Delay each bar to create overlap
     setTimeout(function(){
@@ -62,5 +62,30 @@ main = function(){
   }, this);
 
   animateArrow()
-}()
+}
+
+
+
+function intersectionHandler(cb){
+  return function(entries, observer){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting === undefined || entry.isIntersecting) cb()
+    })
+  }
+}
+
+// call animation when in view
+var options = {
+  root: null,
+  rootMargin: "0px",
+  threshold: 1.0
+};
+var target = document.querySelector('#animate-here');
+var observer = new IntersectionObserver(
+  intersectionHandler(animation),
+  options
+);
+observer.observe(target);
+
+
 
