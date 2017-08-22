@@ -4,7 +4,8 @@ const arrowLines = document.querySelectorAll("path[id^=arrow]")
 var idx = 0
 
 //Setup start values for lines (hides them)
-setup = function(){
+function setup(){
+  idx = 0
 
   setStrokes = function(line, hide){
     const len = line.getTotalLength().toFixed(0);
@@ -20,7 +21,8 @@ setup = function(){
     setStrokes(line, true)
   })
 
-}()
+}
+setup()
 
 //  Helper function to animate a line
 animateLine = function(line, duration){
@@ -33,7 +35,7 @@ animateLine = function(line, duration){
     manipulator: manipulator,
     start: start,
     end: 0,
-    duration: duration
+    duration: duration,
   }
 
   return new cudeAnimations.Animate(options)
@@ -51,25 +53,35 @@ animateArrow = function(){
   )
 }
 
-
 animation = function(){
-  console.log("started")
   bars.forEach(function(bar) {
     // Delay each bar to create overlap
     setTimeout(function(){
-      animateLine(bar).start()
+      animateLine(bar, 600).start()
     }, 130*idx++)
   }, this);
 
   animateArrow()
+ 
 }
 
 
 
+var prevRatio = 0.0;
+
 function intersectionHandler(cb){
   return function(entries, observer){
     entries.forEach(function(entry){
-      if(entry.isIntersecting === undefined || entry.isIntersecting) cb()
+      
+      if (entry.intersectionRatio > prevRatio) {
+        cb()      
+      } else {
+        // Reset values if element on the way out
+        setup() 
+      }
+
+      prevRatio = entry.intersectionRatio;
+      
     })
   }
 }
@@ -78,7 +90,7 @@ function intersectionHandler(cb){
 var options = {
   root: null,
   rootMargin: "0px",
-  threshold: 1.0
+  threshold: 0.1
 };
 var target = document.querySelector('#animate-here');
 var observer = new IntersectionObserver(
