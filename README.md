@@ -1,13 +1,13 @@
-# CountUp.js
-cude-animations is a dependency-free, lightweight simple JavaScript library that can be used to create custom animations.
+# cudeAnimations.js
+cudeAnimations is a dependency-free, lightweight simple JavaScript library that can be used to create custom animations.
 
-cude-animations.js supports all browsers.
+cudeAnimations.js supports all browsers.
 
 ## [Try the demos](https://cruelmoney.github.io/custom-animations/)
 
 ## Installation
 
-Simply include the `cude-animations.js` file in your project or install via npm or bower using the package name `cude-animations`.
+Simply include the `cudeAnimations.js` file in your project or install via npm or bower using the package name `cudeAnimations`.
 
 When including the file the classes are available through the global variable `cudeAnimations`.
 
