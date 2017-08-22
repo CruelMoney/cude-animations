@@ -26,8 +26,7 @@ const nextAnimation = function(i){
     0,            // From this value
     end1,         // To this value
     600,          // Duration in ms. Defaults to 250ms if not specified
-    false,        // Reverse animation. Defaults to false if not specified
-    null          // Custom easing function, see src for examples of easing functions. Defaults to easeInOutExpo.
+    false         // Reverse animation. Defaults to false if not specified
   )
 
   window.cudeAnimations.animate(
