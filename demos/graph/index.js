@@ -7,32 +7,32 @@ var idx = 0
 setup = function(){
 
   bars.forEach(function(bar) {
-    const len = bar.getTotalLength();
-    bar.style.strokeDasharray = len
-    bar.style.strokeDashoffset = -len + 1 // + 1 -> making it visible before animation
+    const len = bar.getTotalLength().toFixed(0);
+    bar.style.strokeDasharray = len 
+    bar.style.strokeDashoffset = len-1 // - 1 -> making it visible before animation
   })
 
-  var len = arrowLines[0].getTotalLength();
+  var len = arrowLines[0].getTotalLength().toFixed(0);
   arrowLines[0].style.strokeDasharray = len
   arrowLines[0].style.strokeDashoffset = len 
 
-  len = arrowLines[1].getTotalLength();
+  len = arrowLines[1].getTotalLength().toFixed(0);
   arrowLines[1].style.strokeDasharray = len
   arrowLines[1].style.strokeDashoffset = len 
 
-  len = arrowLines[2].getTotalLength();
+  len = arrowLines[2].getTotalLength().toFixed(0);
   arrowLines[2].style.strokeDasharray = len
-  arrowLines[2].style.strokeDashoffset = -len 
+  arrowLines[2].style.strokeDashoffset = len 
 
 }
 
 //  Helper function to animate a line
 animateLine = function(line, duration=500){
   manipulator = function(val, last){
-    line.style.strokeDashoffset = val
+    line.style.strokeDashoffset = val.toFixed(0) 
   }
 
-  const start = Number(line.style.strokeDashoffset)
+  const start = parseFloat(line.style.strokeDashoffset)
   const options = {
     manipulator: manipulator,
     start: start,

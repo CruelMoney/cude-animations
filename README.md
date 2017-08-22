@@ -12,9 +12,9 @@ Simply include the `cudeAnimations.js` file from the lib folder in your project 
 When including the file the classes are available through the global variable `cudeAnimations`.
 
 Otherwise the library exports the following modules:
-- `init` = (Function)
-- `keyframes` = (Function)
-- `Animate` = (Class)
+- `init` (Function)
+- `keyframes` (Function)
+- `Animate` (Class)
 
 ## Animate usage:
 
