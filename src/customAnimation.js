@@ -24,14 +24,14 @@ import * as easings from './easings'
  *    }
  *    animate(man, 0, 100)
  */
-export const animate = (manipulator, start, end, dur = 2000, reverse = false) => {
+export const animate = (manipulator, start, end, dur = 2000, reverse = false, customEasing = null) => {
 
-  let startValue       = start,
-      endValue         = end,
+  let startValue       = Number(start),
+      endValue         = Number(end),
       change           = endValue - startValue,
-      duration         = dur,
-      time             = reverse ? dur : 0,
-      easing           = easings.easeInOutExpo
+      duration         = Number(dur),
+      time             = reverse ? duration : 0,
+      easing           = customEasing || easings.easeInOutExpo
 
   return new Promise(function(resolve, reject) {
     
