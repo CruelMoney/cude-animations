@@ -9,7 +9,7 @@ module.exports = {
 	devtool: process.env.NODE_ENV === "development" ? "source-map" : "cheap-module-eval-source-map",
 	
 	output: {
-		filename: 'lib/cude-animations.js',
+		filename: 'lib/cudeAnimations.js',
 		// libraryTarget: 'var',
     // // `library` determines the name of the global variable
     // library: 'cudeAnimations'

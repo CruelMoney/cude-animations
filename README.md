@@ -7,7 +7,7 @@ cudeAnimations.js supports all browsers.
 
 ## Installation
 
-Simply include the `cudeAnimations.js` file from the lib folder in your project or install via npm or bower using the package name `cudeAnimations`.
+Simply include the `cudeAnimations.js` file from the lib folder in your project or install via npm or bower using the package name `cude-animations`.
 
 When including the file the classes are available through the global variable `cudeAnimations`.
 
@@ -63,7 +63,7 @@ var animation = new cudeAnimations.Animate(options)
 animation.start()
 ```
 
-The start() method returns a Promise that is resolved when the animation is finished. This can be used to easily create chained animations. 
+The start() method returns a Promise that is resolved once the animation is finished. This can be used to easily create chained animations. 
 
 Example of chained animation:
 ```js
