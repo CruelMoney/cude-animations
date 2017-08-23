@@ -1,9 +1,8 @@
 const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const Visualizer = require('webpack-visualizer-plugin');
 
-console.log(process.env.NODE_ENV)
-
-module.exports = {
+const options = {
 	entry: './index.js',
 	
 	devtool: process.env.NODE_ENV === "development" ? "source-map" : false,
@@ -44,3 +43,14 @@ module.exports = {
 		})
   ]
 };
+
+if(process.env.NODE_ENV !== "development"){
+	options.plugins.push(
+		new Visualizer({
+			filename: './statistics.html'
+		})
+	)
+}
+
+
+module.exports = options
