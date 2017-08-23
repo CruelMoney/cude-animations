@@ -8,21 +8,18 @@ function setup(){
   idx = 0
 
   setStrokes = function(line, hide){
-    const len = line.getTotalLength().toFixed(0);
-    // the decimals has to be added to fix a bug in edge + ie where setting the same array and offset would not hide the path
-    line.style.strokeDasharray =  hide ? len+0.1 : len
-    line.style.strokeDashoffset = hide ? len+0.2 : len-1
+    var len = line.getTotalLength().toFixed(0);
+    // the 2 and 3 has to be added to fix a bug in edge + ie where setting the same array and offset would not hide the path
+    line.style.strokeDasharray =  hide ? Number(len)+2 : len
+    line.style.strokeDashoffset = hide ? Number(len)+3 : len-1
   }
 
   bars.forEach(function(bar) {
     setStrokes(bar)
   })
-
-  setStrokes(arrowLines[0], true)
-  setStrokes(arrowLines[1], true)
-  setStrokes(arrowLines[2], false)
-  
-
+  arrowLines.forEach(function(line) {
+    setStrokes(line, true)
+  })
 }
 setup()
 
