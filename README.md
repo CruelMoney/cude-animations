@@ -7,32 +7,32 @@ cudeAnimations.js supports all browsers.
 
 ## Installation
 
-Simply include the `cudeAnimations.js` file from the lib folder in your project or install via npm or bower using the package name `cude-animations`.
+Simply include the `cudeAnimations.js` file from the lib folder in your project or install via npm using the package name `cude-animations`.
 
-When including the file the classes are available through the global variable `cudeAnimations`.
+After including the file the classes are available through the global variable `cudeAnimations`.
 
-Otherwise the library exports the following modules:
+If using ES6 modules, the library exports the following modules:
 - `init` (Function)
 - `keyframes` (Function)
 - `Animate` (Class)
 
 ## Animate usage:
 
-When creating a new animation, it expects a options paramter.
+When instantiating a new animation, an options paramter is expected.
 The options parameter is an object containing the following parameters:
-- `target` = {string} ID of html element, needs to be specified if the manipulator is not specified. When using target instead of manipulator, the value is rounded to 0 decimals.
-- `start` = {number} The value to start the animation from 
-- `end` = {number} The value to end the animation at
-- `duration` = {number} (optional) duration of the animation in ms. Default: 250
-- `reverse` = {boolean} (optional) If true animates from end to start value. Default: false
-- `customEasing` = {(t:number, b:number, c:number, d:number)=>void} (option). Default: easings.easeInOutExpo. See section below about custom functions.
-- `manipulator` = {(value:number, end:boolean)=>void} Is called once for each keyframe, needs to be specified if the target is not specified. Recommended way of controlling animation as it gives more control. Keep this function as efficient as possible, as it may be called many times.
+- `start` = {number} The value to start the animation from.
+- `end` = {number} The value to end the animation at.
+- `duration` = {number} (optional) duration of the animation in ms. Default: 250.
+- `reverse` = {boolean} (optional) If true animates from end to start value. Default: false.
+- `customEasing` = {(t:number, b:number, c:number, d:number)=>void} (option). Default: easings.easeInOutExpo. See section below about custom easing functions.
+- `target` = {string} query of html elements. Needs to be specified if the manipulator is not specified. When used, the library will replace the inneHTML of the elements with the value (rounded to 0 decimals).
+- `manipulator` = {(value:number, end:boolean)=>void} Is called once for each keyframe, needs to be specified if the target is not specified. The manipulator is the recommended way of controlling animation. Keep this function as efficient as possible, as it may be called often.
 
 
 Example using target:
 ```js
 var options = {
-  target: ".animate-counter span",
+  target: ".animate-this-element",
   start: 0,
   end: 100,
   duration: 1000
@@ -41,7 +41,7 @@ var animation = new cudeAnimations.Animate(options)
 animation.start()
 ```
 
-Example using manipulator:
+Same example using manipulator:
 ```js
 //  Find the element manually. 
 //  Don't do this inside the manipulator function
@@ -68,14 +68,14 @@ The start() method returns a Promise that is resolved once the animation is fini
 Example of chained animation:
 ```js
 var options = {
-  target: ".animate-counter span",
+  target: ".animate-this-element",
   start: 0,
   end: 100,
   duration: 1000
 }
 
 var options2 = {
-  target: ".animate-counter-2 span",
+  target: ".animate-this-element-after",
   start: 0,
   end: 100,
   duration: 1000
