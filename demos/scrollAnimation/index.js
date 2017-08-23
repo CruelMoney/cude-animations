@@ -1,11 +1,21 @@
 const wrapper = document.querySelector(".wrapper")
+const allHeads = document.querySelectorAll(".head-chooser img")
+const thehead = document.querySelector("#thehead")
+
+function choosehead(e){
+  thehead.src = e.src
+  allHeads.forEach(function(i){
+    i.classList.remove("active")
+  })
+  e.classList.add("active")
+}
 
 cudeAnimations.keyframes.push({
   'wrapper' : wrapper,
   'duration' : '150%',
   'animations' :  [
     {
-      'selector'    : 'img',
+      'selector'    : '.wrapper img',
       'translateY'  : ['100%', '0%'],
       'rotate'      : [0, 360]     
     },
@@ -15,7 +25,7 @@ cudeAnimations.keyframes.push({
   'duration' : '50%',
   'animations' :  [
     {
-      'selector'    : 'img',
+      'selector'    : '.wrapper img',
       'scale'       : [1, 2]    
     },
   ]
@@ -24,7 +34,7 @@ cudeAnimations.keyframes.push({
   'duration' : '50%',
   'animations' :  [
     {
-      'selector'    : 'img',
+      'selector'    : '.wrapper img',
       'scale'       : [2, 1]      
     },
   ]
@@ -34,7 +44,7 @@ cudeAnimations.keyframes.push({
   'duration' : '150%',
   'animations' :  [
     {
-      'selector'    : 'img',
+      'selector'    : '.wrapper img',
       'translateY'  : ['0%', '-100%'],
       'rotate'      : [0, 360]   
     },
@@ -45,7 +55,7 @@ cudeAnimations.keyframes.push({
   'duration' : '100%',
   'animations' :  [
     {
-      'selector'    : 'img',
+      'selector'    : '.wrapper img',
     },
   ]
 })

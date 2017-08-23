@@ -2,7 +2,22 @@
   font-size: 72px;
   text-align: center;
 }
-
+.head-chooser{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  height: 200px;
+}
+.head-chooser img{
+ height: 100%;
+ width: auto;
+ cursor: pointer;
+ opacity: 0.5;
+}
+.head-chooser img.active{
+  opacity: 1;
+ }
 section{
   position: fixed;
   height: 100vh;
@@ -13,8 +28,10 @@ section{
   top: 0;
   left: 0;
 }
-
-img{
+.wrapper{
+  pointer-events: none;
+}
+.wrapper img{
   height: 300px;
   width: auto;
   opacity: 0.1;
