@@ -1,5 +1,6 @@
 *{
   font-size: 72px;
+  text-align: center;
 }
 
 section{
@@ -18,4 +19,36 @@ img{
   width: auto;
   opacity: 0.1;
   transform: translateY(100vh)
+}
+
+
+.floating-element{
+  -webkit-transform: translateY(-10px);
+          transform: translateY(-10px);
+  -webkit-animation: floating 1s infinite alternate backwards;
+          animation: floating 1s infinite alternate backwards;
+  -webkit-animation-timing-function: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+          animation-timing-function: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+}
+
+@-webkit-keyframes floating{
+  from {  
+    -webkit-transform: translateY(-10px);  
+            transform: translateY(-10px);
+  }
+  to {
+    -webkit-transform: translateY(10px);
+            transform: translateY(10px);
+  }
+}
+
+@keyframes floating{
+  from {  
+    -webkit-transform: translateY(-10px);  
+            transform: translateY(-10px);
+  }
+  to {
+    -webkit-transform: translateY(10px);
+            transform: translateY(10px);
+  }
 }
