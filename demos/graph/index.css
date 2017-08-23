@@ -1,4 +1,8 @@
 body{
   background: #111111;
+  color: white;
+}
+
+.distance{
   margin: 200vh 40%;
 }
