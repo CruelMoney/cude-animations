@@ -4,241 +4,248 @@ ORIGINAL CODE CREDIT: https://github.com/dhg/davegamache/
 import {throttle} from './helperFunctions'
 import * as easings from './easings'
 
-/*  Globals
--------------------------------------------------- */
-var PROPERTIES =               ['translateX', 'translateY', 'opacity', 'rotate', 'scale'],
-    container =                null,
-    pageOffset =               0,
-    wrappers =                 [],
-    currentWrapper =           null,
-    scrollTimeoutID =          0,
-    bodyHeight =               0,
-    windowHeight =             0,
-    windowWidth =              0,
-    prevKeyframesDurations =   0,
-    scrollTop =                0,
-    relativeScrollTop =        0,
-    currentKeyframe =          0,
-    keyframes =                []
 
-
-
-/*  Construction
--------------------------------------------------- */
-const init = (theContainer, offset = 0) => {
-  container = theContainer;
-  pageOffset = offset
-  const throttledFunction = throttle(updatePage, 10);
-  window.onscroll = throttledFunction
-  setupValues();
-}
-
-const setupValues = (wrapper) => {
-  scrollTop = window.scrollY - pageOffset
-  windowHeight = window.innerHeight;
-  windowWidth = window.innerWidth;
-  convertAllPropsToPx();
-  buildPage();
-}
-
-const buildPage = () => {
-  var i, j, k;
-  for(i=0;i<keyframes.length;i++) { // loop keyframes
-      bodyHeight += keyframes[i].duration;
-      if(wrappers.indexOf(keyframes[i].wrapper) == -1) {
-        wrappers.push(keyframes[i].wrapper);
-      }
-      for(j=0;j<keyframes[i].animations.length;j++) { // loop animations
-        Object.keys(keyframes[i].animations[j]).forEach((key)=> { // loop properties
-          var value = keyframes[i].animations[j][key];
-          if(key !== 'selector' && key !== 'easing' && value instanceof Array === false) {
-            var valueSet = [];
-            valueSet.push(getDefaultPropertyValue(key), value);
-            value = valueSet;
-          }
-          keyframes[i].animations[j][key] = value;
-        });
-      }
+export default class ScrollAnimator{
+  
+  constructor(theContainer, keyframes, offset = 0){
+    /*  Globals
+    -------------------------------------------------- */
+    this.PROPERTIES =               ['translateX', 'translateY', 'opacity', 'rotate', 'scale']
+    this.container =                theContainer
+    this.pageOffset =               offset
+    this.wrappers =                 []
+    this.currentWrapper =           null
+    this.scrollTimeoutID =          0
+    this.bodyHeight =               0
+    this.windowHeight =             0
+    this.windowWidth =              0
+    this.prevKeyframesDurations =   0
+    this.scrollTop =                0
+    this.relativeScrollTop =        0
+    this.currentKeyframe =          0
+    this.keyframes =                keyframes
+    
+    this.setupValues();
   }
-  container.style.height = bodyHeight + "px";
-  //$window.scroll(0);
- // currentWrapper = wrappers[0];
- // currentWrapper.classList.add("active")
-}
 
-const convertAllPropsToPx = () => {
-  var i, j, k;
-  for(i=0;i<keyframes.length;i++) { // loop keyframes
-    const originalDuration = convertPercentToPx(keyframes[i].duration, 'y');
-    keyframes[i].duration = originalDuration
-    keyframes[i].originalDuration = originalDuration
-    for(j=0;j<keyframes[i].animations.length;j++) { // loop animations
-      Object.keys(keyframes[i].animations[j]).forEach(function(key) { // loop properties
-        var value = keyframes[i].animations[j][key];
-        if(key !== 'selector' && key !== 'easing') {
-          if(value instanceof Array) { // if its an array
-            for(k=0;k<value.length;k++) { // if value in array is %
-              if(typeof value[k] === "string") {
+  setupValues = () => {
+    this.scrollTop = window.scrollY - this.pageOffset
+    this.windowHeight = window.innerHeight;
+    this.windowWidth = window.innerWidth;
+    this.convertAllPropsToPx();
+    this.buildPage();
+  }
+  
+  buildPage = () => {
+    var i, j, k;
+    for(i=0;i<this.keyframes.length;i++) { // loop this.keyframes
+      this.bodyHeight += this.keyframes[i].duration;
+        if(this.wrappers.indexOf(this.keyframes[i].wrapper) == -1) {
+          this.wrappers.push(this.keyframes[i].wrapper);
+        }
+        for(j=0;j<this.keyframes[i].animations.length;j++) { // loop animations
+          Object.keys(this.keyframes[i].animations[j]).forEach((key)=> { // loop properties
+            var value = this.keyframes[i].animations[j][key];
+            if(key !== 'selector' && key !== 'easing' && value instanceof Array === false && typeof value !== 'function') {
+              var valueSet = [];
+              valueSet.push(this.getDefaultPropertyValue(key), value);
+              value = valueSet;
+            }
+            this.keyframes[i].animations[j][key] = value;
+          });
+        }
+    }
+    
+    this.container.style.height = this.bodyHeight + "px";
+    //$window.scroll(0);
+   // currentWrapper = wrappers[0];
+   // currentWrapper.classList.add("active")
+  }
+  
+  convertAllPropsToPx = () => {
+    var i, j, k;
+    for(i=0;i<this.keyframes.length;i++) { // loop this.keyframes
+      
+      const originalDuration = this.convertPercentToPx(this.keyframes[i].duration, 'y');
+      this.keyframes[i].duration = originalDuration
+      this.keyframes[i].originalDuration = originalDuration
+      
+      for(j=0;j<this.keyframes[i].animations.length;j++) { // loop animations
+        Object.keys(this.keyframes[i].animations[j]).forEach((key)=> { // loop properties
+          var value = this.keyframes[i].animations[j][key];
+          if(key !== 'selector' && key !== 'easing' && typeof value !== 'function') {
+            if(value instanceof Array) { // if its an array
+              for(k=0;k<value.length;k++) { // if value in array is %
+                if(typeof value[k] === "string") {
+                  if(key === 'translateY') {
+                    value[k] = this.convertPercentToPx(value[k], 'y');
+                  } else {
+                    value[k] = this.convertPercentToPx(value[k], 'x');
+                  }
+                }
+              } 
+            } else {
+              if(typeof value === "string") { // if single value is a %
                 if(key === 'translateY') {
-                  value[k] = convertPercentToPx(value[k], 'y');
+                  value = this.convertPercentToPx(value, 'y');
                 } else {
-                  value[k] = convertPercentToPx(value[k], 'x');
+                  value = this.convertPercentToPx(value, 'x');
                 }
               }
-            } 
-          } else {
-            if(typeof value === "string") { // if single value is a %
-              if(key === 'translateY') {
-                value = convertPercentToPx(value, 'y');
-              } else {
-                value = convertPercentToPx(value, 'x');
-              }
             }
+            this.keyframes[i].animations[j][key] = value;
           }
-          keyframes[i].animations[j][key] = value;
-        }
-      });
-
-           
-        // Set duration to the longest possible one, when including delay
-        if(keyframes[i].animations[j].delay){
-          var delay = keyframes[i].animations[j].delay
-          keyframes[i].duration = Math.max(keyframes[i].duration, originalDuration+delay)
-        }
-    }
-  }
-}
-
-const getDefaultPropertyValue = (property) => {
-  switch (property) {
-    case 'translateX':
-      return 0;
-    case 'translateY':
-      return 0;
-    case 'scale':
-      return 1;
-    case 'rotate':
-      return 0;
-    case 'opacity':
-      return 1;
-    default:
-      return null;
-  }
-}
-
-/*  Animation/Scrolling
--------------------------------------------------- */
-const updatePage = () => {
-  window.requestAnimationFrame(() => {
-    setScrollTops();
-    if(scrollTop > 0 && scrollTop <= (bodyHeight - windowHeight)) {
-      animateElements();
-      setKeyframe();
-    }else{
-      currentWrapper && currentWrapper.classList.remove("active")
-      currentWrapper = null
-    }
-  });
-}
-
-const setScrollTops = () => {
-  scrollTop = window.scrollY - pageOffset
-  relativeScrollTop = scrollTop - prevKeyframesDurations;
-}
-
-
-const animateElements = () => {
-  var animation, translateY, translateX, scale, rotate, opacity;
-  for(var i=0;i<keyframes[currentKeyframe].animations.length;i++) {
-    animation   = keyframes[currentKeyframe].animations[i];
-    translateY  = calcPropValue(animation, 'translateY');
-    translateX  = calcPropValue(animation, 'translateX');
-    scale       = calcPropValue(animation, 'scale');
-    rotate      = calcPropValue(animation, 'rotate');
-    opacity     = calcPropValue(animation, 'opacity');
-
-    const curElem = document.querySelector(animation.selector)
-    if (curElem){
-      curElem.style.transform = 'translate3d(' + translateX +'px, ' + translateY + 'px, 0) scale('+ scale +') rotate('+ rotate +'deg)';
-      curElem.style.opacity = opacity;
-    }
-  }
-}
-
-const calcPropValue = (animation, property) => {
-  var value = animation[property];
-  var duration = keyframes[currentKeyframe].originalDuration
-  duration = animation.delay ? duration + animation.delay[1] : duration
-  const easingFun = animation.easing === "linear" ? easings.linear : easings.easeInOutQuad
-  // Progress should not exceed duration, 
-  // can happen in case of delayed animations in same keyframe
-  var progress = Math.min(relativeScrollTop, duration)
+        });
   
-  if(value) {
-    value = easingFun(progress, value[0], (value[1]-value[0]), duration)
-  } else {
-    value = getDefaultPropertyValue(property);
-  }
-  // SCALE DOESN'T WORK WITH A AGRESSIVE ROUNDING LIKE THIS
-  value = +value.toFixed(2) 
-  return value;
-}
-
-
-const setKeyframe = () => {
-  if(!currentWrapper){
-    currentWrapper = wrappers[0]
-    currentWrapper.classList.add("active")
-  }
-  if(scrollTop > (keyframes[currentKeyframe].duration + prevKeyframesDurations)) {
-      prevKeyframesDurations += keyframes[currentKeyframe].duration;
-      currentKeyframe++;
-      showCurrentWrappers();
-  } else if(scrollTop < prevKeyframesDurations) {
-      currentKeyframe--;
-      prevKeyframesDurations -= keyframes[currentKeyframe].duration;
-      showCurrentWrappers();
-  }
-}
-
-const showCurrentWrappers = () => {
-  var i;
- 
-  if(keyframes[currentKeyframe].wrapper != currentWrapper) {
-    currentWrapper.classList.remove("active")
-    keyframes[currentKeyframe].wrapper.classList.add("active")
-    currentWrapper = keyframes[currentKeyframe].wrapper;
-    if (keyframes[currentKeyframe].keyframeStarted){
-      keyframes[currentKeyframe].keyframeStarted();
+             
+          // Set duration to the longest possible one, when including delay
+          if(this.keyframes[i].animations[j].delay){
+            var delay = this.keyframes[i].animations[j].delay
+            this.keyframes[i].duration = Math.max(this.keyframes[i].duration, originalDuration+delay)
+          }
+      }
     }
-  } 
-
-}
-
-/*  Helpers
--------------------------------------------------- */
-
-const convertPercentToPx = (value, axis) => {
-  if(typeof value === "string" && value.match(/%/g)) {
-    if(axis === 'y') value = (parseFloat(value) / 100) * windowHeight;
-    if(axis === 'x') value = (parseFloat(value) / 100) * windowWidth;
   }
-  return value;
-}
+  
+  getDefaultPropertyValue = (property) => {
+    switch (property) {
+      case 'translateX':
+        return 0;
+      case 'translateY':
+        return 0;
+      case 'scale':
+        return 1;
+      case 'rotate':
+        return 0;
+      case 'opacity':
+        return 1;
+      default:
+        return null;
+    }
+  }
+  
+  /*  Animation/Scrolling
+  -------------------------------------------------- */
+  updatePage = () => {
+    window.requestAnimationFrame(() => {
+      this.setScrollTops();
+      if(this.scrollTop > 0 && this.scrollTop <= (this.bodyHeight - this.windowHeight)) {
+        this.animateElements();
+        this.setKeyframe();
+      }else{
+        this.currentWrapper && this.currentWrapper.classList.remove("active")
+        this.currentWrapper = null
+      }
+    });
+  }
+  
+  setScrollTops = () => {
+    this.scrollTop = window.scrollY - this.pageOffset
+    this.relativeScrollTop = this.scrollTop - this.prevKeyframesDurations;
+  }
+  
+  
+  animateElements = () => {
+    var animation, translateY, translateX, scale, rotate, opacity;
+    for(var i=0;i<this.keyframes[this.currentKeyframe].animations.length;i++) {
+      animation   = this.keyframes[this.currentKeyframe].animations[i];
+      if(animation.manipulator){
+        const value = this.calcPropValue(animation, 'valueRange')
+        animation.manipulator(value)
+      }else{
+        translateY  = this.calcPropValue(animation, "translateY");
+        translateX  = this.calcPropValue(animation, "translateX");
+        scale       = this.calcPropValue(animation, "scale");
+        rotate      = this.calcPropValue(animation, "rotate");
+        opacity     = this.calcPropValue(animation, "opacity");
+    
+        const curElem = document.querySelector(animation.selector)
+        if (curElem){
+          curElem.style.transform = 'translate3d(' + translateX +'px, ' + translateY + 'px, 0) scale('+ scale +') rotate('+ rotate +'deg)';
+          curElem.style.opacity = opacity;
+        }
+      }
+    
+    }
+  }
+  
+  calcPropValue = (animation, property) => {
+    var value = animation[property]
+    var duration = this.keyframes[this.currentKeyframe].originalDuration
+    duration = animation.delay ? duration + animation.delay[1] : duration
+    const easingFun = animation.easing === "linear" ? easings.linear : easings.easeInOutQuad
+    // Progress should not exceed duration, 
+    // can happen in case of delayed animations in same keyframe
+    var progress = Math.min(this.relativeScrollTop, duration)
+    
+    if(value) {
+      value = easingFun(progress, value[0], (value[1]-value[0]), duration)
+    } else {
+      value = this.getDefaultPropertyValue(property);
+    }
+    // SCALE DOESN'T WORK WITH A AGRESSIVE ROUNDING LIKE THIS
+    value = +value.toFixed(2) 
+    return value;
+  }
+  
+  
+  setKeyframe = () => {
+    if(!this.currentWrapper){
+      this.currentWrapper = this.wrappers[0]
+      this.currentWrapper.classList.add("active")
+    }
+    if(this.scrollTop > (this.keyframes[this.currentKeyframe].duration + this.prevKeyframesDurations)) {
+      this.prevKeyframesDurations += this.keyframes[this.currentKeyframe].duration;
+        this.currentKeyframe++;
+        this.showCurrentWrappers();
+    } else if(this.scrollTop < this.prevKeyframesDurations) {
+        this.currentKeyframe--;
+        this.prevKeyframesDurations -= this.keyframes[this.currentKeyframe].duration;
+        this.showCurrentWrappers();
+    }
+  }
+  
+  showCurrentWrappers = () => {
+    var i;
+   
+    if(this.keyframes[this.currentKeyframe].wrapper != this.currentWrapper) {
+      this.currentWrapper.classList.remove("active")
+      this.keyframes[this.currentKeyframe].wrapper.classList.add("active")
+      this.currentWrapper = this.keyframes[this.currentKeyframe].wrapper;
+      if (this.keyframes[this.currentKeyframe].keyframeStarted){
+        this.keyframes[this.currentKeyframe].keyframeStarted();
+      }
+    } 
+  
+  }
 
-const throwError = () => {
-  console.log("errrrrooorrr 💥")
-}
 
-const isTouchDevice = () => {
-  return 'ontouchstart' in window // works on most browsers 
-  || 'onmsgesturechange' in window; // works on ie10
-}
+  /*  Helpers
+  -------------------------------------------------- */
 
+  convertPercentToPx = (value, axis) => {
+    if(typeof value === "string" && value.match(/%/g)) {
+      if(axis === 'y') value = (parseFloat(value) / 100) * this.windowHeight;
+      if(axis === 'x') value = (parseFloat(value) / 100) * this.windowWidth;
+    }
+    return value;
+  }
 
-/*  Exports
--------------------------------------------------- */
-export {
-  init,
-  keyframes 
+  throwError = () => {
+    console.log("errrrrooorrr 💥")
+  }
+
+  isTouchDevice = () => {
+    return 'ontouchstart' in window // works on most browsers 
+    || 'onmsgesturechange' in window; // works on ie10
+  }
+
+  start=()=>{
+    this.scrollHandler = throttle(this.updatePage, 10);
+    window.addEventListener("scroll", this.scrollHandler)
+  }
+
+  stop=()=>{
+    window.removeEventListener("scroll", this.scrollHandler)
+  }
 }

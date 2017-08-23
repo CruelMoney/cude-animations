@@ -1,17 +1,15 @@
 import './polyfills'
-import { init, keyframes } from './scrollAnimation'
+import ScrollAnimator from './scrollAnimation'
 import Animate from './customAnimation'
 
 if(typeof(window) !== 'undefined'){
   window.cudeAnimations = {
-    init,
-    keyframes, 
+    ScrollAnimator, 
     Animate
   }
 }
 
 export {
-  init,
-  keyframes,
+  ScrollAnimator,
   Animate
 }

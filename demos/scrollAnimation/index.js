@@ -1,6 +1,5 @@
 const wrapper = document.querySelector(".wrapper")
 const allHeads = document.querySelectorAll(".head-chooser img")
-const thehead = document.querySelector("#thehead")
 
 function choosehead(e){
   thehead.src = e.src
@@ -10,7 +9,7 @@ function choosehead(e){
   e.classList.add("active")
 }
 
-cudeAnimations.keyframes.push({
+const keyframes = [{
   'wrapper' : wrapper,
   'duration' : '150%',
   'animations' :  [
@@ -25,8 +24,10 @@ cudeAnimations.keyframes.push({
   'duration' : '50%',
   'animations' :  [
     {
-      'selector'    : '.wrapper img',
-      'scale'       : [1, 2]    
+      manipulator : function(val){
+        thehead.style.transform = `scale(${val})`
+      },
+      'valueRange'       : [1, 2]    
     },
   ]
 },{
@@ -58,7 +59,10 @@ cudeAnimations.keyframes.push({
       'selector'    : '.wrapper img',
     },
   ]
-})
-
-
-cudeAnimations.init(document.querySelector("body"), 0)
+}]
+const animator = new cudeAnimations.ScrollAnimator(
+  document.querySelector("body"), 
+  keyframes,
+  0
+)
+animator.start()
