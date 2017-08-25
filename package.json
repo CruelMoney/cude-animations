@@ -4,7 +4,7 @@
   "repository": "https://github.com/CruelMoney/custom-animations.git",
   "author": "cruelmoney <chrdengso@gmail.com>",
   "license": "MIT",
-  "main": "./src/index.js",
+  "main": "lib/cudeAnimations.js",
   "scripts": {
     "build": "NODE_ENV=production webpack ",
     "start": "NODE_ENV=development webpack --watch ",
