@@ -1,6 +1,6 @@
 {
   "name": "cude-animations",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "repository": "https://github.com/CruelMoney/custom-animations.git",
   "author": "cruelmoney <chrdengso@gmail.com>",
   "license": "MIT",
@@ -8,7 +8,7 @@
   "scripts": {
     "build": "NODE_ENV=production webpack ",
     "start": "NODE_ENV=development webpack --watch ",
-    "prepare": "yarn run build"  
+    "prepare": "yarn run build"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
