@@ -8,8 +8,7 @@
   "scripts": {
     "build": "NODE_ENV=production webpack ",
     "start": "NODE_ENV=development webpack --watch ",
-    "prepare": "yarn run build",
-    "prepublish": "yarn run build"
+    "prepare": "yarn run build"  
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
