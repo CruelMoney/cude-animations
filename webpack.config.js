@@ -7,13 +7,6 @@ const options = {
 	
 	devtool: process.env.NODE_ENV === "development" ? "source-map" : false,
 	
-	output: {
-		filename: 'lib/cudeAnimations.js',
-		// libraryTarget: 'var',
-    // // `library` determines the name of the global variable
-    // library: 'cudeAnimations'
-	},
-
 	context: path.join(__dirname, 'src'),
 
 	resolve: {
@@ -53,4 +46,20 @@ if(process.env.NODE_ENV !== "development"){
 }
 
 
-module.exports = options
+const varOptions = {
+	...options,
+	output: {
+		filename: 'dist/cudeAnimations.min.js',
+		libraryTarget: 'var',
+	}
+}
+const commonjsOptions = {
+	...options,
+	output: {
+		filename: 'dist/cudeAnimations.es.js',
+		libraryTarget: 'commonjs',
+	}
+}
+
+
+module.exports = [ varOptions, commonjsOptions ]
