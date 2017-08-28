@@ -14,8 +14,7 @@ Simply include the `cudeAnimations.js` file from the lib folder in your project 
 After including the file the classes are available through the global variable `cudeAnimations`.
 
 If using ES6 modules, the library exports the following modules:
-- `init` (Function)
-- `keyframes` (Function)
+- `ScrollAnimator` (Class) - not documented yet
 - `Animate` (Class)
 
 ## Animate usage:
@@ -124,4 +123,4 @@ new cudeAnimations.Animate(options).start()
 
 ## Scroll Animation:
 This library also contains methods for controlling the animatino using scroll, instead of a duration. 
-Still needs to be documented. See `scrollAnimation.js` for code.
+Still needs to be documented. See `scrollAnimation` for example.
