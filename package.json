@@ -5,8 +5,6 @@
   "author": "cruelmoney <chrdengso@gmail.com>",
   "license": "MIT",
   "main": "./lib/cudeAnimations.js",
-  "module": "./src/index.js",
-  "jsnext:main": "./src/index.js",
   "scripts": {
     "build": "NODE_ENV=production webpack ",
     "start": "NODE_ENV=development webpack --watch ",
