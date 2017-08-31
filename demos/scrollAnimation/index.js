@@ -61,8 +61,8 @@ const keyframes = [{
   ]
 }]
 const animator = new cudeAnimations.ScrollAnimator(
-  document.querySelector("body"), 
+  document.querySelector(".scrollwrapper"), 
   keyframes,
-  0
+  100
 )
 animator.start()

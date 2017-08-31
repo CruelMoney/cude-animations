@@ -17,6 +17,7 @@ export default class ScrollAnimator{
     this.currentWrapper =           null
     this.scrollTimeoutID =          0
     this.bodyHeight =               0
+    this.originalBodyHeight =       0
     this.windowHeight =             0
     this.windowWidth =              0
     this.prevKeyframesDurations =   0
@@ -40,6 +41,7 @@ export default class ScrollAnimator{
     var i, j, k;
     for(i=0;i<this.keyframes.length;i++) { // loop this.keyframes
       this.bodyHeight += this.keyframes[i].duration;
+      this.originalBodyHeight += this.keyframes[i].originalDuration;
         if(this.wrappers.indexOf(this.keyframes[i].wrapper) == -1) {
           this.wrappers.push(this.keyframes[i].wrapper);
         }
@@ -56,10 +58,10 @@ export default class ScrollAnimator{
         }
     }
     
-    this.container.style.height = this.bodyHeight + "px";
+    this.container.style.height = this.originalBodyHeight + "px";
     //$window.scroll(0);
-   // currentWrapper = wrappers[0];
-   // currentWrapper.classList.add("active")
+    this.currentWrapper = this.wrappers[0];
+    this.currentWrapper.classList.add("active")
   }
   
   convertAllPropsToPx = () => {
@@ -129,12 +131,9 @@ export default class ScrollAnimator{
   updatePage = () => {
     window.requestAnimationFrame(() => {
       this.setScrollTops();
-      if(this.scrollTop > 0 && this.scrollTop <= (this.bodyHeight - this.windowHeight)) {
+      if(this.scrollTop > 0 && this.scrollTop <= (this.bodyHeight)) {
         this.animateElements();
         this.setKeyframe();
-      }else{
-        this.currentWrapper && this.currentWrapper.classList.remove("active")
-        this.currentWrapper = null
       }
     });
   }
@@ -190,10 +189,6 @@ export default class ScrollAnimator{
   
   
   setKeyframe = () => {
-    if(!this.currentWrapper){
-      this.currentWrapper = this.wrappers[0]
-      this.currentWrapper.classList.add("active")
-    }
     if(this.scrollTop > (this.keyframes[this.currentKeyframe].duration + this.prevKeyframesDurations)) {
       this.prevKeyframesDurations += this.keyframes[this.currentKeyframe].duration;
         this.currentKeyframe++;
