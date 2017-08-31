@@ -50,15 +50,6 @@ const keyframes = [{
       'rotate'      : [0, 360]   
     },
   ]
-},
-{
-  'wrapper' : wrapper,
-  'duration' : '100%',
-  'animations' :  [
-    {
-      'selector'    : '.wrapper img',
-    },
-  ]
 }]
 const animator = new cudeAnimations.ScrollAnimator(
   document.querySelector(".scrollwrapper"), 
