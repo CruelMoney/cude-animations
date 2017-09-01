@@ -58,7 +58,7 @@ export default class ScrollAnimator{
         }
     }
     
-    this.container.style.height = this.originalBodyHeight + "px";
+    this.container.style.height = (this.originalBodyHeight + this.pageOffset) + "px";
     //$window.scroll(0);
     this.currentWrapper = this.wrappers[0];
     this.currentWrapper.classList.add("active")
