@@ -1,7 +1,7 @@
 /*
 ORIGINAL CODE CREDIT: https://github.com/dhg/davegamache/
 */
-import {throttle} from './helperFunctions'
+import throttle from 'lodash.throttle'
 import * as easings from './easings'
 
 
@@ -236,7 +236,8 @@ export default class ScrollAnimator{
   }
 
   start=()=>{
-    this.scrollHandler = throttle(this.updatePage, 10);
+    console.log(throttle)
+    this.scrollHandler = throttle(this.updatePage, 10, {trailing: true, leading: true});
     window.addEventListener("scroll", this.scrollHandler)
   }
 
