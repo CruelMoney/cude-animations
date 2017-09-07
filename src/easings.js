@@ -4,6 +4,7 @@
 // b is the beginning value of the property.
 // c is the change between the beginning and destination value of the property.
 // d is the total time of the tween.
+// see http://gizma.com/easing/ for more easings.
 
 const linear = (t, b, c, d) => {
   return c * t / d + b;

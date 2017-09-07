@@ -236,7 +236,6 @@ export default class ScrollAnimator{
   }
 
   start=()=>{
-    console.log(throttle)
     this.scrollHandler = throttle(this.updatePage, 10, {trailing: true, leading: true});
     window.addEventListener("scroll", this.scrollHandler)
   }
