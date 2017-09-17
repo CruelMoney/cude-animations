@@ -1,9 +1,9 @@
 # cudeAnimations.js
 cudeAnimations is a lightweight simple JavaScript library that can be used to create custom animations.
 
-The minified library weights 18.4kb, where 8kb of those is a promise polyfill. If needed a new build can be made without the polyfill.
+The minified library weights 8kb before gzip. It relies on a promise polyfill, so if your project doesn't include that beforehand, you can use cudeAnimations.withpoly.min.js instead of cudeAnimations.min.js. 
 
-cudeAnimations.js supports all browsers.
+When using the polyfied version, cudeAnimations.js supports all browsers.
 
 ## [Try the demos](https://cruelmoney.github.io/cude-animations/)
 

@@ -19,12 +19,8 @@ const options = {
 				test: /\.jsx?$/,
 				exclude: /node_modules/,
 				loader: 'babel-loader',
-
 				options: {
-					presets: ['es2015', 'react', 'stage-2'],
-					plugins: [
-						"es6-promise"
-					]
+					presets: ['es2015', 'react', 'stage-2']
 				}
 			}
 		]
@@ -53,6 +49,28 @@ const varOptions = {
 		libraryTarget: 'var',
 	}
 }
+const varPolyOptions = {
+	...options,
+	module: {
+		rules: [
+			{
+				test: /\.jsx?$/,
+				exclude: /node_modules/,
+				loader: 'babel-loader',
+				options: {
+					presets: ['es2015', 'react', 'stage-2'],
+					plugins: [
+						"es6-promise"
+					]
+				}
+			}
+		]
+	},
+	output: {
+		filename: 'dist/cudeAnimations.withpoly.min.js',
+		libraryTarget: 'var',
+	}
+}
 const commonjsOptions = {
 	...options,
 	output: {
@@ -62,4 +80,4 @@ const commonjsOptions = {
 }
 
 
-module.exports = [ varOptions, commonjsOptions ]
+module.exports = [ varOptions, commonjsOptions, varPolyOptions ]
