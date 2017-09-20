@@ -171,7 +171,7 @@ export default class ScrollAnimator{
     var value = animation[property]
     var duration = this.keyframes[this.currentKeyframe].originalDuration
     duration = animation.delay ? duration + animation.delay[1] : duration
-    const easingFun = animation.easing === "linear" ? easings.linear : easings.easeInOutQuad
+    const easingFun = easings[animation.easing] ? easings[animation.easing] : easings.easeInOutQuad
     // Progress should not exceed duration, 
     // can happen in case of delayed animations in same keyframe
     var progress = Math.min(this.relativeScrollTop, duration)

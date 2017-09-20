@@ -16,7 +16,8 @@ const keyframes = [{
     {
       'selector'    : '.wrapper img',
       'translateY'  : ['100%', '0%'],
-      'rotate'      : [0, 360]     
+      'rotate'      : [0, 360]     ,
+      'easing'      : 'linear'
     },
   ]
 },{
@@ -27,7 +28,8 @@ const keyframes = [{
       manipulator : function(val){
         thehead.style.transform = `scale(${val})`
       },
-      'valueRange'       : [1, 2]    
+      'valueRange'       : [1, 2]  ,
+      'easing'      : 'linear'  
     },
   ]
 },{
@@ -36,7 +38,8 @@ const keyframes = [{
   'animations' :  [
     {
       'selector'    : '.wrapper img',
-      'scale'       : [2, 1]      
+      'scale'       : [2, 1]   ,
+      'easing'      : 'linear'   
     },
   ]
 },
@@ -47,7 +50,8 @@ const keyframes = [{
     {
       'selector'    : '.wrapper img',
       'translateY'  : ['0%', '-100%'],
-      'rotate'      : [0, 360]   
+      'rotate'      : [0, 360],
+      'easing'      : 'linear'
     },
   ]
 }]
