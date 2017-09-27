@@ -52,7 +52,7 @@ export default class Animate{
       this.duration          = Number(options.duration || 250),
       this.reverse           = !!options.reverse,  // !! operator converts to boolean
       this.time              = this.reverse ? this.duration : 0,
-      this.easing            = options.customEasing || easings.easeInOutExpo,
+      this.easing            = options.customEasing || (options.easing ? easings[options.easing] : easings.easeInOutExpo),
       this.manipulator       = options.manipulator || elementManipulator  
     
       
