@@ -42,12 +42,6 @@ const easeInOutExpo =  (t, b, c, d)=>  {
 	t--;
 	return c/2 * ( -Math.pow( 2, -10 * t) + 2 ) + b;
 };
-const easeInOutQuad =  (t, b, c, d) => {
-	t /= d/2;
-	if (t < 1) return c/2*t*t + b;
-	t--;
-	return -c/2 * (t*(t-2) - 1) + b;
-};
 const easeInOutCubic = (t, b, c, d) => {
 	t /= d/2;
 	if (t < 1) return c/2*t*t*t + b;
@@ -67,7 +61,6 @@ export {
   easeOutCirc,
   easeOutExpo,
 	easeInOutExpo,
-	easeInOutCubic,
-	easeInOutQuad
-}
+	easeInOutCubic
+} 
 
