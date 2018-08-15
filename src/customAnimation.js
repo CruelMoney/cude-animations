@@ -81,8 +81,6 @@ export default class Animate{
     });
   }
 
-  getDuration = _ => this.duration;
-
   animationHandler = (timestamp, initTimestamp, resolve) => {
     const td = timestamp - initTimestamp;
     const timeleft = this.duration - td;
