@@ -9,10 +9,43 @@
  *   .catch(console.error)
  */
 const promiseSequence = funcs =>
-funcs.reduce((promise, func) =>
-  promise.then(result => func().then(Array.prototype.concat.bind(result))),
-  Promise.resolve([]))
+  funcs.reduce((promise, func) =>
+    promise.then(result => func().then(Array.prototype.concat.bind(result))),
+    Promise.resolve([]));
+
+
+const runAnimationSequence = (animations) => {
+  return new Promise((resolve, reject)=> {
+    
+    let initTimestamp;
+    let animation;
+    let duration = animations.reduce((max, a) => Math.max(a.duration, max), 0);
+    let offset = animations.reduce((offset, a) => (a.offset + offset), -animations[0].offset);
+    duration += offset; // add the offset
+
+    const animationHandler = timestamp => {
+      const td = timestamp - initTimestamp;
+      const timeleft = duration - td;
+      if(timeleft > 0){
+        animations.forEach((animation, idx) => {
+          const offset = idx*animation.offset;
+          animation.animationHandler(timestamp - offset, initTimestamp);
+        });
+        animation = window.requestAnimationFrame(animationHandler);   
+      }else{
+        cancelAnimationFrame(animation);
+        resolve();
+      }
+    }
+
+    animation = window.requestAnimationFrame(timestamp => {
+      initTimestamp = timestamp;
+      animationHandler(timestamp, initTimestamp, resolve);
+    });
+  });
+}
 
 export{
-  promiseSequence
+  promiseSequence,
+  runAnimationSequence
 }

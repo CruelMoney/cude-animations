@@ -1,18 +1,20 @@
 import './polyfills'
 import ScrollAnimator from './scrollAnimation'
 import Animate from './customAnimation'
-import {promiseSequence} from './helperFunctions'
+import {promiseSequence, runAnimationSequence} from './helperFunctions'
 
 if(typeof(window) !== 'undefined'){
   window.cudeAnimations = {
     ScrollAnimator, 
     Animate,
-    promiseSequence
+    promiseSequence,
+    runAnimationSequence
   }
 }
 
 export {
   ScrollAnimator,
   Animate,
-  promiseSequence
+  promiseSequence,
+  runAnimationSequence
 }

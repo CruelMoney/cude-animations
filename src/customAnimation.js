@@ -46,16 +46,17 @@ export default class Animate{
     }
 
     
-      this.startValue        = Number(options.start),
-      this.endValue          = Number(options.end),
-      this.change            = this.endValue - this.startValue,
-      this.duration          = Number(options.duration || 250),
-      this.reverse           = !!options.reverse,  // !! operator converts to boolean
-      this.time              = this.reverse ? this.duration : 0,
-      this.easing            = options.customEasing || (options.easing ? easings[options.easing] : easings.easeInOutExpo),
-      this.manipulator       = options.manipulator || elementManipulator  
-    
-      
+    this.startValue        = Number(options.start);
+    this.endValue          = Number(options.end);
+    this.offset            = Number(options.offset || 0);
+    this.change            = this.endValue - this.startValue;
+    this.duration          = Number(options.duration || 250);
+    this.reverse           = !!options.reverse;  // !! operator converts to boolean
+    this.time              = this.reverse ? this.duration : 0;
+    this.easing            = options.customEasing || (options.easing ? easings[options.easing] : easings.easeInOutExpo);
+    this.manipulator       = options.manipulator || elementManipulator;
+    this.animation         = null;
+    this.resolved          = false;
   }
 
   /**
@@ -66,34 +67,46 @@ export default class Animate{
   start = () => {
     return new Promise((resolve, reject)=> {
       
-      const theAnimation = setInterval(()=>{
-        window.requestAnimationFrame(()=>{
-          
-          const val = this.easing(
-            this.time, 
-            this.startValue, 
-            this.change, 
-            this.duration
-          )
-          
-          this.manipulator(val)
-          
-          this.time = this.reverse ? 
-            this.time-10 : 
-            this.time+10;
+      let initTimestamp;
 
-          if(
-            this.time >= this.duration || 
-            (this.reverse && this.time <= 0)
-            ){ 
-            clearInterval(theAnimation)
-            this.manipulator(this.endValue, true)
-            resolve()
-          }
-        })
-      },10)
-  
+      const animationHandler = timestamp => {
+        this.animationHandler(timestamp, initTimestamp, resolve);
+        this.animation = window.requestAnimationFrame(animationHandler);      
+      }
+
+      this.animation = window.requestAnimationFrame(timestamp => {
+        initTimestamp = timestamp;
+        animationHandler(timestamp, initTimestamp, resolve);
+      });
     });
+  }
+
+  getDuration = _ => this.duration;
+
+  animationHandler = (timestamp, initTimestamp, resolve) => {
+    const td = timestamp - initTimestamp;
+    const timeleft = this.duration - td;
+    const time = this.reverse ? timeleft : td;
+
+    // resolve 
+    if((timeleft - this.offset) <= 0 && !this.resolved){
+      this.resolved = true;
+      !!resolve && resolve();
+    }
+
+    if(timeleft <= 0){ 
+      !!this.animation && cancelAnimationFrame(this.animation);
+      this.manipulator(this.endValue, true);
+    }else{  
+      const val = this.easing(
+        time, 
+        this.startValue, 
+        this.change, 
+        this.duration
+      );
+      
+      this.manipulator(val);
+    }
   }
 
 }
