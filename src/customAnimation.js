@@ -30,6 +30,7 @@ export default class Animate{
  * @return {Animate} 
  */
   constructor(options){
+
     if(!options.target && !options.manipulator){
       throw Error("An element or manipulator need to be specified in options.")
     }
@@ -45,18 +46,18 @@ export default class Animate{
       }
     }
 
-    
-    this.startValue        = Number(options.start);
-    this.endValue          = Number(options.end);
+
+    this.reverse           = !!options.reverse; 
+    this.startValue        = this.reverse ? Number(options.end) :  Number(options.start);
+    this.endValue          = this.reverse ? Number(options.start) :  Number(options.end);
     this.offset            = Number(options.offset || 0);
     this.change            = this.endValue - this.startValue;
     this.duration          = Number(options.duration || 250);
-    this.reverse           = !!options.reverse;  // !! operator converts to boolean
-    this.time              = this.reverse ? this.duration : 0;
     this.easing            = options.customEasing || (options.easing ? easings[options.easing] : easings.easeInOutExpo);
     this.manipulator       = options.manipulator || elementManipulator;
     this.animation         = null;
     this.resolved          = false;
+
   }
 
   /**
@@ -84,7 +85,6 @@ export default class Animate{
   animationHandler = (timestamp, initTimestamp, resolve) => {
     const td = timestamp - initTimestamp;
     const timeleft = this.duration - td;
-    const time = this.reverse ? timeleft : td;
 
     // resolve 
     if((timeleft - this.offset) <= 0 && !this.resolved){
@@ -94,10 +94,10 @@ export default class Animate{
 
     if(timeleft <= 0){ 
       !!this.animation && cancelAnimationFrame(this.animation);
-      this.manipulator(this.endValue, true);
-    }else{  
+      this.manipulator(this.endValue);
+    }else if(td > 0){  
       const val = this.easing(
-        time, 
+        td, 
         this.startValue, 
         this.change, 
         this.duration

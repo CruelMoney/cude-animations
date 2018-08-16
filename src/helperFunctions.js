@@ -15,6 +15,8 @@ const promiseSequence = funcs =>
 
 
 const runAnimationSequence = (animations) => {
+  !!window.animation &&  cancelAnimationFrame(window.animation);
+
   return new Promise((resolve, reject)=> {
     
     let initTimestamp;
@@ -29,9 +31,10 @@ const runAnimationSequence = (animations) => {
       if(timeleft > 0){
         animations.forEach((animation, idx) => {
           const offset = idx*animation.offset;
-          animation.animationHandler(timestamp - offset, initTimestamp);
+          animation.animationHandler(timestamp-offset, initTimestamp);
         });
-        animation = window.requestAnimationFrame(animationHandler);   
+        animation = window.requestAnimationFrame(animationHandler);
+        window.animation = animation; 
       }else{
         cancelAnimationFrame(animation);
         resolve();
