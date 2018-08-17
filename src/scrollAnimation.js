@@ -24,7 +24,6 @@ export default class ScrollAnimator{
     this.relativeScrollTop =        0
     this.currentKeyframe =          0
     this.keyframes =                keyframes
-    
     this.setupValues();
   }
 
@@ -44,15 +43,24 @@ export default class ScrollAnimator{
         if(this.wrappers.indexOf(this.keyframes[i].wrapper) == -1) {
           this.wrappers.push(this.keyframes[i].wrapper);
         }
-        for(j=0;j<this.keyframes[i].animations.length;j++) { // loop animations
-          Object.keys(this.keyframes[i].animations[j]).forEach((key)=> { // loop properties
-            var value = this.keyframes[i].animations[j][key];
+        for(j=0;j< this.keyframes[i].animations.length;j++) { // loop animations
+          // set selector if not using manipulator
+          const animation = this.keyframes[i].animations[j];
+          if(!!animation.selector){
+            animation.selector = 
+              typeof animation.selector === 'string' 
+              ? this.container.querySelector(animation.selector)
+              : animation.selector;
+          }
+
+          Object.keys(animation).forEach((key)=> { // loop properties
+            var value = animation[key];
             if(key !== 'selector' && key !== 'easing' && value instanceof Array === false && typeof value !== 'function') {
               var valueSet = [];
               valueSet.push(this.getDefaultPropertyValue(key), value);
               value = valueSet;
             }
-            this.keyframes[i].animations[j][key] = value;
+            animation[key] = value;
           });
         }
     }
@@ -60,7 +68,7 @@ export default class ScrollAnimator{
     this.container.style.height = (this.originalBodyHeight) + "px";
     //$window.scroll(0);
     this.currentWrapper = this.wrappers[0];
-    this.currentWrapper.classList.add("active")
+    this.currentWrapper.classList.add("active");
   }
   
   convertAllPropsToPx = () => {
@@ -130,15 +138,13 @@ export default class ScrollAnimator{
   updatePage = () => {
     window.requestAnimationFrame(() => {
       this.setScrollTops();
-      if(this.scrollTop > 0 && this.scrollTop <= (this.bodyHeight)) {
-        this.animateElements();
-        this.setKeyframe();
-      }
+      this.animateElements();
+      this.setKeyframe();
     });
   }
   
   setScrollTops = () => {
-    this.scrollTop = window.scrollY - this.pageOffset
+    this.scrollTop = window.scrollY - this.pageOffset;
     this.relativeScrollTop = this.scrollTop - this.prevKeyframesDurations;
   }
   
@@ -157,7 +163,7 @@ export default class ScrollAnimator{
         rotate      = this.calcPropValue(animation, "rotate");
         opacity     = this.calcPropValue(animation, "opacity");
     
-        const curElem = document.querySelector(animation.selector)
+        const curElem = animation.selector;
         if (curElem){
           curElem.style.transform = 'translate3d(' + translateX +'px, ' + translateY + 'px, 0) scale('+ scale +') rotate('+ rotate +'deg)';
           curElem.style.opacity = opacity;
@@ -175,7 +181,8 @@ export default class ScrollAnimator{
     // Progress should not exceed duration, 
     // can happen in case of delayed animations in same keyframe
     var progress = Math.min(this.relativeScrollTop, duration)
-    
+    progress = Math.max(progress, 0);
+
     if(value) {
       value = easingFun(progress, value[0], (value[1]-value[0]), duration)
     } else {
@@ -190,13 +197,14 @@ export default class ScrollAnimator{
   setKeyframe = () => {
     if(this.scrollTop > (this.keyframes[this.currentKeyframe].duration + this.prevKeyframesDurations)) {
       this.prevKeyframesDurations += this.keyframes[this.currentKeyframe].duration;
-        this.currentKeyframe++;
-        this.showCurrentWrappers();
+      this.currentKeyframe = Math.min(this.keyframes.length-1, this.currentKeyframe+1);
+      this.showCurrentWrappers();
     } else if(this.scrollTop < this.prevKeyframesDurations) {
-        this.currentKeyframe--;
-        this.prevKeyframesDurations -= this.keyframes[this.currentKeyframe].duration;
-        this.showCurrentWrappers();
+      this.currentKeyframe = Math.max(0, this.currentKeyframe-1);
+      this.prevKeyframesDurations -= this.keyframes[this.currentKeyframe].duration;
+      this.showCurrentWrappers();
     }
+    console.log(this.currentKeyframe)
   }
   
   showCurrentWrappers = () => {
