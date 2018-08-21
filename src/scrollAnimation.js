@@ -165,13 +165,19 @@ export default class ScrollAnimator{
     
         const curElem = animation.selector;
         if (curElem){
-          curElem.style.transform = 'translate3d(' + translateX +'px, ' + translateY + 'px, 0) scale('+ scale +') rotate('+ rotate +'deg)';
+          if(this.hasTransform(animation)){
+            curElem.style.transform = 'translate3d(' + translateX +'px, ' + translateY + 'px, 0) scale('+ scale +') rotate('+ rotate +'deg)';
+          }
           curElem.style.opacity = opacity;
         }
       }
     
     }
   }
+
+  hasTransform = (animation) => (
+    !!animation.translateX || !!animation.translateY || !!animation.rotate
+  );
   
   calcPropValue = (animation, property) => {
     var value = animation[property]
@@ -197,14 +203,13 @@ export default class ScrollAnimator{
   setKeyframe = () => {
     if(this.scrollTop > (this.keyframes[this.currentKeyframe].duration + this.prevKeyframesDurations)) {
       this.prevKeyframesDurations += this.keyframes[this.currentKeyframe].duration;
-      this.currentKeyframe = Math.min(this.keyframes.length-1, this.currentKeyframe+1);
+      this.currentKeyframe = Math.min(this.keyframes.length-1, this.currentKeyframe+1); // prevent out of bounds
       this.showCurrentWrappers();
     } else if(this.scrollTop < this.prevKeyframesDurations) {
-      this.currentKeyframe = Math.max(0, this.currentKeyframe-1);
+      this.currentKeyframe = Math.max(0, this.currentKeyframe-1); // prevent out of bounds
       this.prevKeyframesDurations -= this.keyframes[this.currentKeyframe].duration;
       this.showCurrentWrappers();
     }
-    console.log(this.currentKeyframe)
   }
   
   showCurrentWrappers = () => {
