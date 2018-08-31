@@ -6,12 +6,12 @@ import * as easings from './easings'
 
 export default class ScrollAnimator{
   
-  constructor(theContainer, keyframes, offset = 0){
+  constructor(theContainer, keyframes, offset){
     /*  Globals
     -------------------------------------------------- */
-    this.PROPERTIES =               ['translateX', 'translateY', 'opacity', 'rotate', 'scale']
+    this.PROPERTIES =               ['translateX', 'translateY', 'opacity', 'rotate', 'scale', 'rotateX', 'rotateY']
     this.container =                theContainer
-    this.pageOffset =               offset
+    this.pageOffset =               !offset ? 0 : offset
     this.wrappers =                 []
     this.currentWrapper =           null
     this.scrollTimeoutID =          0
@@ -28,7 +28,7 @@ export default class ScrollAnimator{
   }
 
   setupValues = () => {
-    this.scrollTop = window.scrollY - this.pageOffset
+    this.scrollTop = window.scrollY;
     this.windowHeight = window.innerHeight;
     this.windowWidth = window.innerWidth;
     this.convertAllPropsToPx();
@@ -49,7 +49,7 @@ export default class ScrollAnimator{
           if(!!animation.selector){
             animation.selector = 
               typeof animation.selector === 'string' 
-              ? this.container.querySelector(animation.selector)
+              ? document.querySelector(animation.selector)
               : animation.selector;
           }
 
@@ -66,9 +66,13 @@ export default class ScrollAnimator{
     }
     
     this.container.style.height = (this.originalBodyHeight) + "px";
-    //$window.scroll(0);
     this.currentWrapper = this.wrappers[0];
     this.currentWrapper.classList.add("active");
+
+    // get container page offset
+    const containerOffset = this.container.getBoundingClientRect().top;
+    // calculate maxScroll as containerHeight - offset. To stop animation after scrolling past container.
+    this.maxScroll = this.originalBodyHeight;
   }
   
   convertAllPropsToPx = () => {
@@ -114,6 +118,7 @@ export default class ScrollAnimator{
           }
       }
     }
+
   }
   
   getDefaultPropertyValue = (property) => {
@@ -126,6 +131,10 @@ export default class ScrollAnimator{
         return 1;
       case 'rotate':
         return 0;
+      case 'rotateY':
+        return 0;
+      case 'rotateX':
+        return 0;
       case 'opacity':
         return 1;
       default:
@@ -136,37 +145,45 @@ export default class ScrollAnimator{
   /*  Animation/Scrolling
   -------------------------------------------------- */
   updatePage = () => {
-    window.requestAnimationFrame(() => {
-      this.setScrollTops();
-      this.animateElements();
-      this.setKeyframe();
-    });
+    
+      window.requestAnimationFrame(() => {
+        this.setScrollTops();
+        if(this.scrollTop < this.maxScroll ){
+          this.animateElements();
+          this.setKeyframe();
+        }else{
+          console.log("above max scroll")
+        }
+      });
   }
   
   setScrollTops = () => {
-    this.scrollTop = window.scrollY - this.pageOffset;
+    this.scrollTop = window.scrollY;
     this.relativeScrollTop = this.scrollTop - this.prevKeyframesDurations;
   }
   
   
   animateElements = () => {
-    var animation, translateY, translateX, scale, rotate, opacity;
-    for(var i=0;i<this.keyframes[this.currentKeyframe].animations.length;i++) {
-      animation   = this.keyframes[this.currentKeyframe].animations[i];
+    var animation, translateY, translateX, scale, rotate, rotateX, rotateY, opacity;
+    const keyframe = this.keyframes[this.currentKeyframe];
+    for(var i=0;i< keyframe.animations.length ; i++) {
+      animation   = keyframe.animations[i];
       if(animation.manipulator){
-        const value = this.calcPropValue(animation, 'valueRange')
-        animation.manipulator(value)
+        const value = this.calcPropValue(animation, 'valueRange');
+        animation.manipulator(value, this.scrollTop);
       }else{
         translateY  = this.calcPropValue(animation, "translateY");
         translateX  = this.calcPropValue(animation, "translateX");
         scale       = this.calcPropValue(animation, "scale");
         rotate      = this.calcPropValue(animation, "rotate");
+        rotateX     = this.calcPropValue(animation, "rotateX");
+        rotateY     = this.calcPropValue(animation, "rotateY");
         opacity     = this.calcPropValue(animation, "opacity");
     
         const curElem = animation.selector;
         if (curElem){
           if(this.hasTransform(animation)){
-            curElem.style.transform = 'translate3d(' + translateX +'px, ' + translateY + 'px, 0) scale('+ scale +') rotate('+ rotate +'deg)';
+            curElem.style.transform = 'translate3d(' + translateX +'px, ' + translateY + 'px, 0) scale('+ scale +') rotate('+ rotate +'deg)  rotateX('+ rotateX +'deg)' + 'rotateY('+ rotateY +'deg)';
           }
           curElem.style.opacity = opacity;
         }
@@ -176,7 +193,7 @@ export default class ScrollAnimator{
   }
 
   hasTransform = (animation) => (
-    !!animation.translateX || !!animation.translateY || !!animation.rotate
+    !!animation.translateX || !!animation.translateY || !!animation.rotate || !!animation.scale
   );
   
   calcPropValue = (animation, property) => {
@@ -201,15 +218,15 @@ export default class ScrollAnimator{
   
   
   setKeyframe = () => {
-    if(this.scrollTop > (this.keyframes[this.currentKeyframe].duration + this.prevKeyframesDurations)) {
-      this.prevKeyframesDurations += this.keyframes[this.currentKeyframe].duration;
-      this.currentKeyframe = Math.min(this.keyframes.length-1, this.currentKeyframe+1); // prevent out of bounds
-      this.showCurrentWrappers();
-    } else if(this.scrollTop < this.prevKeyframesDurations) {
-      this.currentKeyframe = Math.max(0, this.currentKeyframe-1); // prevent out of bounds
-      this.prevKeyframesDurations -= this.keyframes[this.currentKeyframe].duration;
-      this.showCurrentWrappers();
-    }
+      if(this.scrollTop > (this.keyframes[this.currentKeyframe].duration + this.prevKeyframesDurations)) {
+        this.prevKeyframesDurations += this.keyframes[this.currentKeyframe].duration;
+        this.currentKeyframe = Math.min(this.keyframes.length-1, this.currentKeyframe+1); // prevent out of bounds
+        this.showCurrentWrappers();
+      } else if(this.scrollTop < this.prevKeyframesDurations) {
+        this.currentKeyframe = Math.max(0, this.currentKeyframe-1); // prevent out of bounds
+        this.prevKeyframesDurations -= this.keyframes[this.currentKeyframe].duration;
+        this.showCurrentWrappers();
+      }
   }
   
   showCurrentWrappers = () => {

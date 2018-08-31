@@ -60,4 +60,4 @@ const animator = new cudeAnimations.ScrollAnimator(
   keyframes,
   100
 )
-animator.start()
+animator.start();
