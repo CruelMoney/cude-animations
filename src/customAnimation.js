@@ -67,18 +67,19 @@ export default class Animate{
   */
   start = () => {
     return new Promise((resolve, reject)=> {
-      
       let initTimestamp;
 
-      const animationHandler = timestamp => {
+      const animationRequest = timestamp => {
+        this.animation = window.requestAnimationFrame(animationRequest);      
         this.animationHandler(timestamp, initTimestamp, resolve);
-        this.animation = window.requestAnimationFrame(animationHandler);      
       }
 
+      // start like this to set init timestamp
       this.animation = window.requestAnimationFrame(timestamp => {
         initTimestamp = timestamp;
-        animationHandler(timestamp, initTimestamp, resolve);
+        animationRequest(timestamp);
       });
+
     });
   }
 
@@ -86,7 +87,8 @@ export default class Animate{
     const td = timestamp - initTimestamp;
     const timeleft = this.duration - td;
 
-    // resolve 
+    // resolve if time is of (offset subtracted)
+    // means it can be resolved before animation is finished, because offset
     if((timeleft - this.offset) <= 0 && !this.resolved){
       this.resolved = true;
       !!resolve && resolve();
