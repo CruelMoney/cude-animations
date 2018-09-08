@@ -170,7 +170,7 @@ export default class ScrollAnimator{
       animation   = keyframe.animations[i];
       if(animation.manipulator){
         const value = this.calcPropValue(animation, 'valueRange');
-        animation.manipulator(value, this.scrollTop);
+        animation.manipulator(value, this.scrollTop, animation.selector);
       }else{
         translateY  = this.calcPropValue(animation, "translateY");
         translateX  = this.calcPropValue(animation, "translateX");
