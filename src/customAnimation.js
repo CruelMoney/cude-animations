@@ -71,6 +71,7 @@ export default class Animate{
 
       const animationRequest = timestamp => {
         this.animation = window.requestAnimationFrame(animationRequest);      
+
         this.animationHandler(timestamp, initTimestamp, resolve);
       }
 
