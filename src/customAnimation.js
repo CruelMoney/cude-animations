@@ -50,6 +50,7 @@ export default class Animate {
 			: Number(options.start);
 		this.endValue = this.reverse ? Number(options.start) : Number(options.end);
 		this.offset = Number(options.offset || 0);
+		this.delay = Number(options.delay || 0);
 		this.change = this.endValue - this.startValue;
 		this.duration = Number(options.duration || 250);
 		this.easing =
@@ -82,6 +83,7 @@ export default class Animate {
 
 			// start like this to set init timestamp
 			this.animation = window.requestAnimationFrame(timestamp => {
+				timestamp += this.delay;
 				this.initTimestamp = timestamp;
 				this.state = "running";
 				window.cudeAnimations.runningAnimations.push(this);
