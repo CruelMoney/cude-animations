@@ -1,20 +1,16 @@
-import './polyfills'
-import ScrollAnimator from './scrollAnimation'
-import Animate from './customAnimation'
-import {promiseSequence, runAnimationSequence} from './helperFunctions'
+import "./polyfills";
+import ScrollAnimator from "./scrollAnimation";
+import Animate from "./customAnimation";
+import { promiseSequence, runAnimationSequence } from "./helperFunctions";
 
-if(typeof(window) !== 'undefined'){
-  window.cudeAnimations = {
-    ScrollAnimator, 
-    Animate,
-    promiseSequence,
-    runAnimationSequence
-  }
+if (typeof window !== "undefined") {
+	window.cudeAnimations = {
+		ScrollAnimator,
+		Animate,
+		promiseSequence,
+		runAnimationSequence,
+		runningAnimations: []
+	};
 }
 
-export {
-  ScrollAnimator,
-  Animate,
-  promiseSequence,
-  runAnimationSequence
-}
+export { ScrollAnimator, Animate, promiseSequence, runAnimationSequence };
