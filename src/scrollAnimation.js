@@ -233,7 +233,10 @@ export default class ScrollAnimator {
 						rotateY +
 						"deg)";
 				}
-				curElem.style.opacity = opacity;
+
+				if (animation.opacity) {
+					curElem.style.opacity = opacity;
+				}
 			}
 		}
 	};
