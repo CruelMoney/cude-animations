@@ -2,6 +2,7 @@
 ORIGINAL CODE CREDIT: https://github.com/dhg/davegamache/
 */
 import * as easings from "./easings";
+import * as Rematrix from "rematrix";
 
 export default class ScrollAnimator {
 	constructor(theContainer, keyframes, offset) {
@@ -189,52 +190,39 @@ export default class ScrollAnimator {
 		this.relativeScrollTop = this.scrollTop - this.prevKeyframesDurations;
 	};
 
+	getTransform = animation => {
+		const translateY = this.calcPropValue(animation, "translateY");
+		const translateX = this.calcPropValue(animation, "translateX");
+		const scale = this.calcPropValue(animation, "scale");
+		const rotate = this.calcPropValue(animation, "rotate");
+		const rotateX = this.calcPropValue(animation, "rotateX");
+		const rotateY = this.calcPropValue(animation, "rotateY");
+
+		const product = [
+			Rematrix.translateY(translateY),
+			Rematrix.translateX(translateX),
+			Rematrix.scale(scale),
+			Rematrix.rotate(rotate),
+			Rematrix.rotateX(rotateX),
+			Rematrix.rotateY(rotateY)
+		].reduce(Rematrix.multiply);
+
+		return "matrix3d(" + product.join(", ") + ")";
+	};
+
 	animateElements = () => {
-		var animation,
-			translateY,
-			translateX,
-			scale,
-			rotate,
-			rotateX,
-			rotateY,
-			opacity;
 		const keyframe = this.keyframes[this.currentKeyframe];
 		for (var i = 0; i < keyframe.animations.length; i++) {
-			animation = keyframe.animations[i];
-			if (animation.manipulator) {
-				const value = this.calcPropValue(animation, "valueRange");
-				animation.manipulator(value, this.scrollTop, animation.selector);
-			}
-
-			translateY = this.calcPropValue(animation, "translateY");
-			translateX = this.calcPropValue(animation, "translateX");
-			scale = this.calcPropValue(animation, "scale");
-			rotate = this.calcPropValue(animation, "rotate");
-			rotateX = this.calcPropValue(animation, "rotateX");
-			rotateY = this.calcPropValue(animation, "rotateY");
-			opacity = this.calcPropValue(animation, "opacity");
-
+			const animation = keyframe.animations[i];
 			const curElem = animation.selector;
 			if (curElem) {
-				if (this.hasTransform(animation)) {
-					curElem.style.transform =
-						"translate3d(" +
-						translateX +
-						"px, " +
-						translateY +
-						"px, 0) scale(" +
-						scale +
-						") rotate(" +
-						rotate +
-						"deg)  rotateX(" +
-						rotateX +
-						"deg)" +
-						"rotateY(" +
-						rotateY +
-						"deg)";
+				if (animation.manipulator) {
+					const value = this.calcPropValue(animation, "valueRange");
+					animation.manipulator(value, this.scrollTop, curElem);
 				}
-
+				curElem.style.transform = this.getTransform(animation);
 				if (animation.opacity) {
+					const opacity = this.calcPropValue(animation, "opacity");
 					curElem.style.opacity = opacity;
 				}
 			}
