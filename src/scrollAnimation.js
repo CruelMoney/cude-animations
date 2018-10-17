@@ -174,7 +174,7 @@ export default class ScrollAnimator {
 	/*  Animation/Scrolling
   -------------------------------------------------- */
 	updatePage = () => {
-		window.requestAnimationFrame(() => {
+		window.requestAnimationFrame(timestamp => {
 			this.setScrollTops();
 			if (this.scrollTop < this.maxScroll) {
 				this.animateElements();
