@@ -79,6 +79,10 @@ export default class Animate {
 				window.cudeAnimations.runningAnimations.forEach(a => {
 					a.animationHandler(timestamp);
 				});
+				// if no running animations left
+				if (window.cudeAnimations.runningAnimations.length === 0) {
+					!!this.animation && cancelAnimationFrame(this.animation);
+				}
 			};
 
 			// start like this to set init timestamp
@@ -87,7 +91,6 @@ export default class Animate {
 				this.initTimestamp = timestamp;
 				this.state = "running";
 				window.cudeAnimations.runningAnimations.push(this);
-
 				// if the length is > than 1 it means that an animation
 				// is already requesting keyframes,
 				// and this one is automatically gonna be included
@@ -109,10 +112,6 @@ export default class Animate {
 		window.cudeAnimations.runningAnimations = window.cudeAnimations.runningAnimations.filter(
 			a => a != this
 		);
-		// if no running animations left
-		if (window.cudeAnimations.runningAnimations.length === 0) {
-			!!this.animation && cancelAnimationFrame(this.animation);
-		}
 	};
 
 	animationHandler = timestamp => {
