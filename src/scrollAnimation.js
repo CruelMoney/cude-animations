@@ -4,6 +4,16 @@ ORIGINAL CODE CREDIT: https://github.com/dhg/davegamache/
 import * as easings from "./easings";
 import * as Rematrix from "rematrix";
 
+let scrollListeners = [];
+
+const addOnScroll = fun => {
+	scrollListeners.push(fun);
+};
+
+const removeOnScroll = fun => {
+	scrollListeners = scrollListeners.filter(f => f !== fun);
+};
+
 export default class ScrollAnimator {
 	constructor(theContainer, keyframes, offset) {
 		/*  Globals
@@ -31,6 +41,7 @@ export default class ScrollAnimator {
 		this.relativeScrollTop = 0;
 		this.currentKeyframe = 0;
 		this.keyframes = keyframes;
+		this.ticking = false;
 		this.setupValues();
 	}
 
@@ -40,6 +51,7 @@ export default class ScrollAnimator {
 		this.windowWidth = window.innerWidth;
 		this.convertAllPropsToPx();
 		this.buildPage();
+		this.preCalculateStyle();
 	};
 
 	buildPage = () => {
@@ -77,6 +89,8 @@ export default class ScrollAnimator {
 					}
 					animation[key] = value;
 				});
+
+				animation.preCalculations = [];
 			}
 		}
 
@@ -150,6 +164,17 @@ export default class ScrollAnimator {
 		}
 	};
 
+	preCalculateStyle = () => {
+		// Take height of whole thing
+		const end = this.maxScroll;
+		let scrollTop = 0;
+		while (scrollTop < end) {
+			this.setScrollTops(scrollTop);
+			this.animateElements(scrollTop);
+			scrollTop++;
+		}
+	};
+
 	getDefaultPropertyValue = property => {
 		switch (property) {
 			case "translateX":
@@ -174,19 +199,26 @@ export default class ScrollAnimator {
 	/*  Animation/Scrolling
   -------------------------------------------------- */
 	updatePage = () => {
-		window.requestAnimationFrame(timestamp => {
-			this.setScrollTops();
-			if (this.scrollTop < this.maxScroll) {
-				this.animateElements();
-				this.setKeyframe();
-			} else {
-				// above max scroll
-			}
-		});
+		if (!this.ticking) {
+			this.ticking = true;
+			window.requestAnimationFrame(this.animationHandler);
+		}
 	};
 
-	setScrollTops = () => {
-		this.scrollTop = window.scrollY;
+	animationHandler = timestamp => {
+		this.setScrollTops();
+
+		if (this.scrollTop < this.maxScroll) {
+			this.animateElements(this.scrollTop);
+			this.setKeyframe();
+		}
+		scrollListeners.forEach(f => f(this.scrollTop));
+
+		this.ticking = false;
+	};
+
+	setScrollTops = (scrollTop = window.scrollY) => {
+		this.scrollTop = scrollTop;
 		this.relativeScrollTop = this.scrollTop - this.prevKeyframesDurations;
 	};
 
@@ -210,20 +242,37 @@ export default class ScrollAnimator {
 		return "matrix3d(" + product.join(", ") + ")";
 	};
 
-	animateElements = () => {
+	animateElements = saveValue => {
 		const keyframe = this.keyframes[this.currentKeyframe];
 		for (var i = 0; i < keyframe.animations.length; i++) {
 			const animation = keyframe.animations[i];
 			const curElem = animation.selector;
 			if (curElem) {
-				if (animation.manipulator) {
-					const value = this.calcPropValue(animation, "valueRange");
-					animation.manipulator(value, this.scrollTop, curElem);
+				if (this.hasTransform(animation)) {
+					let css = null;
+					if (saveValue) {
+						const cache = animation.preCalculations[saveValue];
+						if (cache) {
+							css = cache;
+						} else {
+							css = this.getTransform(animation);
+							animation.preCalculations[saveValue] = css;
+						}
+					} else {
+						css = this.getTransform(animation);
+					}
+					curElem.style.webkitTransform = css;
+					curElem.style.transform = css;
 				}
-				curElem.style.transform = this.getTransform(animation);
+
 				if (animation.opacity) {
 					const opacity = this.calcPropValue(animation, "opacity");
 					curElem.style.opacity = opacity;
+				}
+
+				if (animation.manipulator) {
+					const value = this.calcPropValue(animation, "valueRange");
+					animation.manipulator(value, this.scrollTop, curElem);
 				}
 			}
 		}
@@ -277,6 +326,7 @@ export default class ScrollAnimator {
 				this.currentKeyframe
 			].duration;
 			this.showCurrentWrappers();
+			this.prevKeyframesDurations = Math.max(0, this.prevKeyframesDurations); // prevent out of bounds
 		}
 	};
 
@@ -287,9 +337,9 @@ export default class ScrollAnimator {
 			this.currentWrapper.classList.remove("active");
 			this.keyframes[this.currentKeyframe].wrapper.classList.add("active");
 			this.currentWrapper = this.keyframes[this.currentKeyframe].wrapper;
-			if (this.keyframes[this.currentKeyframe].keyframeStarted) {
-				this.keyframes[this.currentKeyframe].keyframeStarted();
-			}
+		}
+		if (this.keyframes[this.currentKeyframe].keyframeStarted) {
+			this.keyframes[this.currentKeyframe].keyframeStarted();
 		}
 	};
 
@@ -316,10 +366,14 @@ export default class ScrollAnimator {
 
 	start = () => {
 		this.scrollHandler = this.updatePage;
+		window.cudeAnimations.scrollActive = true;
 		window.addEventListener("scroll", this.scrollHandler);
 	};
 
 	stop = () => {
+		window.cudeAnimations.scrollActive = false;
 		window.removeEventListener("scroll", this.scrollHandler);
 	};
 }
+
+export { addOnScroll, removeOnScroll };

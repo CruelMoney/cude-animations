@@ -1578,6 +1578,13 @@ fast-deep-equal@^1.0.0:
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-1.0.0.tgz#96256a3bc975595eb36d82e9929d060d893439ff"
   integrity sha1-liVqO8l1WV6zbYLpkp0GDYk0Of8=
 
+fastdom@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/fastdom/-/fastdom-1.0.8.tgz#10f9d36998fd6efae30e529597d788e750c9febb"
+  integrity sha512-UvXbYr/nsu4Z2XIjJXtJEMv5yhS9GIyEuZBZus6jOYSo3zMsw6/FtWUAeskmDK6tKnfPSo6renooyNWuq00ZKw==
+  dependencies:
+    strictdom "^1.0.1"
+
 fbjs@^0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.6.1.tgz#9636b7705f5ba9684d44b72f78321254afc860f7"
@@ -3002,6 +3009,11 @@ stream-http@^2.3.1:
     readable-stream "^2.2.6"
     to-arraybuffer "^1.0.0"
     xtend "^4.0.0"
+
+strictdom@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/strictdom/-/strictdom-1.0.1.tgz#189de91649f73d44d59b8432efa68ef9d2659460"
+  integrity sha1-GJ3pFkn3PUTVm4Qy76aO+dJllGA=
 
 string-width@^1.0.1, string-width@^1.0.2:
   version "1.0.2"

@@ -1,5 +1,5 @@
 import "./polyfills";
-import ScrollAnimator from "./scrollAnimation";
+import ScrollAnimator, { addOnScroll, removeOnScroll } from "./scrollAnimation";
 import Animate from "./customAnimation";
 import { promiseSequence, runAnimationSequence } from "./helperFunctions";
 
@@ -9,8 +9,17 @@ if (typeof window !== "undefined") {
 		Animate,
 		promiseSequence,
 		runAnimationSequence,
-		runningAnimations: []
+		runningAnimations: [],
+		addOnScroll,
+		removeOnScroll
 	};
 }
 
-export { ScrollAnimator, Animate, promiseSequence, runAnimationSequence };
+export {
+	ScrollAnimator,
+	Animate,
+	promiseSequence,
+	runAnimationSequence,
+	addOnScroll,
+	removeOnScroll
+};

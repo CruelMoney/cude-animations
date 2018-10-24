@@ -24,6 +24,7 @@
     "webpack-visualizer-plugin": "^0.1.11"
   },
   "dependencies": {
+    "fastdom": "^1.0.8",
     "rematrix": "^0.3.0"
   }
 }
